@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package com.mycompany.skynet;
 
 /**
@@ -26,72 +23,162 @@ public class SkyNetUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        BtnLoadMap = new javax.swing.JButton();
+        BtnRestrictGoods = new javax.swing.JButton();
+        btnDisposeSimulation = new javax.swing.JButton();
+        BtnDirectedWrld = new javax.swing.JButton();
+        BtnPowerfulCity = new javax.swing.JButton();
+        btnAnnihilateWrld = new javax.swing.JButton();
+        btnChooseCityWipeOut = new javax.swing.JButton();
+        btnClosestCon2Cities = new javax.swing.JButton();
+        btnArmyCon2Cities = new javax.swing.JButton();
+        BtnDivideWrld = new javax.swing.JButton();
+        JlActualMap = new javax.swing.JLabel();
+        btnMostEfficientWipeOut = new javax.swing.JButton();
+        btnMostConnectedCity = new javax.swing.JButton();
+        btnSaveSimulation = new javax.swing.JButton();
+        JlSimulatedDestruction = new javax.swing.JLabel();
         LlbBackground = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(1200, 670));
         getContentPane().setLayout(null);
 
-        jButton1.setText("Load Map");
-        getContentPane().add(jButton1);
-        jButton1.setBounds(80, 70, 130, 50);
+        BtnLoadMap.setText("Load Map");
+        BtnLoadMap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnLoadMapActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BtnLoadMap);
+        BtnLoadMap.setBounds(80, 70, 130, 50);
 
-        jButton2.setText("2");
-        getContentPane().add(jButton2);
-        jButton2.setBounds(210, 240, 130, 50);
+        BtnRestrictGoods.setText("Restrict Goods");
+        BtnRestrictGoods.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnRestrictGoodsActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BtnRestrictGoods);
+        BtnRestrictGoods.setBounds(210, 240, 130, 50);
 
-        jButton3.setText("Save Simulation");
-        getContentPane().add(jButton3);
-        jButton3.setBounds(910, 310, 130, 50);
+        btnDisposeSimulation.setBackground(new java.awt.Color(102, 0, 51));
+        btnDisposeSimulation.setFont(new java.awt.Font("sansserif", 0, 10)); // NOI18N
+        btnDisposeSimulation.setText("Dispose Simulation");
+        btnDisposeSimulation.setEnabled(false);
+        btnDisposeSimulation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDisposeSimulationActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnDisposeSimulation);
+        btnDisposeSimulation.setBounds(660, 370, 140, 30);
 
-        jButton4.setText("3");
-        getContentPane().add(jButton4);
-        jButton4.setBounds(350, 240, 130, 50);
+        BtnDirectedWrld.setText("Directed World");
+        BtnDirectedWrld.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnDirectedWrldActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BtnDirectedWrld);
+        BtnDirectedWrld.setBounds(710, 240, 130, 50);
 
-        jButton5.setText("4");
-        getContentPane().add(jButton5);
-        jButton5.setBounds(490, 240, 130, 50);
+        BtnPowerfulCity.setText("Wipe Out Most Powerful City");
+        BtnPowerfulCity.setEnabled(false);
+        BtnPowerfulCity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnPowerfulCityActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BtnPowerfulCity);
+        BtnPowerfulCity.setBounds(510, 240, 190, 50);
 
-        jButton6.setText("5");
-        getContentPane().add(jButton6);
-        jButton6.setBounds(630, 240, 130, 50);
+        btnAnnihilateWrld.setText("Annihilate the World");
+        btnAnnihilateWrld.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnnihilateWrldActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnAnnihilateWrld);
+        btnAnnihilateWrld.setBounds(1020, 240, 150, 50);
 
-        jButton7.setText("6");
-        getContentPane().add(jButton7);
-        jButton7.setBounds(770, 240, 130, 50);
+        btnChooseCityWipeOut.setText("Choose Connection to Destroy");
+        btnChooseCityWipeOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChooseCityWipeOutActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnChooseCityWipeOut);
+        btnChooseCityWipeOut.setBounds(740, 300, 200, 50);
 
-        jButton8.setText("7");
-        getContentPane().add(jButton8);
-        jButton8.setBounds(910, 240, 130, 50);
+        btnClosestCon2Cities.setText("Wipe Out Closest Connection/ 2 Cities");
+        btnClosestCon2Cities.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClosestCon2CitiesActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnClosestCon2Cities);
+        btnClosestCon2Cities.setBounds(250, 300, 250, 50);
 
-        jButton9.setText("8");
-        getContentPane().add(jButton9);
-        jButton9.setBounds(1050, 240, 130, 50);
+        btnArmyCon2Cities.setText("Wipe Out Army Connection/ 2 Cities");
+        btnArmyCon2Cities.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnArmyCon2CitiesActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnArmyCon2Cities);
+        btnArmyCon2Cities.setBounds(510, 300, 220, 50);
 
-        jButton10.setText("1");
-        getContentPane().add(jButton10);
-        jButton10.setBounds(70, 240, 130, 50);
+        BtnDivideWrld.setText("Devide World");
+        BtnDivideWrld.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnDivideWrldActionPerformed(evt);
+            }
+        });
+        getContentPane().add(BtnDivideWrld);
+        BtnDivideWrld.setBounds(70, 240, 130, 50);
 
-        jLabel1.setFont(new java.awt.Font("Source Sans Pro", 1, 24)); // NOI18N
-        jLabel1.setText("Actual City");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(70, 370, 160, 31);
+        JlActualMap.setFont(new java.awt.Font("Source Sans Pro", 1, 24)); // NOI18N
+        JlActualMap.setForeground(new java.awt.Color(255, 255, 255));
+        JlActualMap.setText("Actual Map");
+        getContentPane().add(JlActualMap);
+        JlActualMap.setBounds(70, 370, 260, 31);
 
-        jLabel2.setFont(new java.awt.Font("Source Sans Pro", 1, 24)); // NOI18N
-        jLabel2.setText("Simulated Destruction");
-        getContentPane().add(jLabel2);
-        jLabel2.setBounds(850, 370, 260, 31);
+        btnMostEfficientWipeOut.setText("Most Efficient Destruction");
+        btnMostEfficientWipeOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostEfficientWipeOutActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnMostEfficientWipeOut);
+        btnMostEfficientWipeOut.setBounds(840, 240, 180, 50);
+
+        btnMostConnectedCity.setText("Most Connected City");
+        btnMostConnectedCity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMostConnectedCityActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnMostConnectedCity);
+        btnMostConnectedCity.setBounds(350, 240, 150, 50);
+
+        btnSaveSimulation.setBackground(new java.awt.Color(102, 0, 51));
+        btnSaveSimulation.setFont(new java.awt.Font("sansserif", 0, 10)); // NOI18N
+        btnSaveSimulation.setText("Save Simulation");
+        btnSaveSimulation.setEnabled(false);
+        btnSaveSimulation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveSimulationActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnSaveSimulation);
+        btnSaveSimulation.setBounds(1060, 370, 110, 30);
+
+        JlSimulatedDestruction.setFont(new java.awt.Font("Source Sans Pro", 1, 24)); // NOI18N
+        JlSimulatedDestruction.setForeground(new java.awt.Color(102, 0, 51));
+        JlSimulatedDestruction.setText("Simulated Destruction");
+        getContentPane().add(JlSimulatedDestruction);
+        JlSimulatedDestruction.setBounds(810, 370, 260, 31);
 
         LlbBackground.setIcon(new javax.swing.ImageIcon("C:\\Users\\pavel\\OneDrive\\Documents\\NetBeansProjects\\SkyNet\\SkyNet\\src\\main\\java\\Images\\BackGround.jpg")); // NOI18N
         getContentPane().add(LlbBackground);
@@ -99,6 +186,91 @@ public class SkyNetUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void BtnLoadMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLoadMapActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BtnLoadMapActionPerformed
+
+    private void BtnDirectedWrldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDirectedWrldActionPerformed
+        setupButtonState();
+        BtnPowerfulCity.setEnabled(true);
+    }//GEN-LAST:event_BtnDirectedWrldActionPerformed
+
+    private void BtnPowerfulCityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPowerfulCityActionPerformed
+        setupButtonState();
+    }//GEN-LAST:event_BtnPowerfulCityActionPerformed
+
+    private void btnArmyCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArmyCon2CitiesActionPerformed
+        setupButtonState();
+    }//GEN-LAST:event_btnArmyCon2CitiesActionPerformed
+
+    private void btnDisposeSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisposeSimulationActionPerformed
+        enableAllButtons();
+    }//GEN-LAST:event_btnDisposeSimulationActionPerformed
+
+    private void btnChooseCityWipeOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseCityWipeOutActionPerformed
+        setupButtonState();
+    }//GEN-LAST:event_btnChooseCityWipeOutActionPerformed
+
+    private void btnSaveSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveSimulationActionPerformed
+        enableAllButtons();
+    }//GEN-LAST:event_btnSaveSimulationActionPerformed
+
+    private void BtnDivideWrldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDivideWrldActionPerformed
+        setupButtonState();
+    }//GEN-LAST:event_BtnDivideWrldActionPerformed
+
+    private void BtnRestrictGoodsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRestrictGoodsActionPerformed
+        setupButtonState();
+    }//GEN-LAST:event_BtnRestrictGoodsActionPerformed
+
+    private void btnMostConnectedCityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostConnectedCityActionPerformed
+        setupButtonState();
+    }//GEN-LAST:event_btnMostConnectedCityActionPerformed
+
+    private void btnMostEfficientWipeOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostEfficientWipeOutActionPerformed
+        setupButtonState();
+    }//GEN-LAST:event_btnMostEfficientWipeOutActionPerformed
+
+    private void btnAnnihilateWrldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnnihilateWrldActionPerformed
+        setupButtonState();
+    }//GEN-LAST:event_btnAnnihilateWrldActionPerformed
+
+    private void btnClosestCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClosestCon2CitiesActionPerformed
+        setupButtonState();
+    }//GEN-LAST:event_btnClosestCon2CitiesActionPerformed
+    private void setupButtonState() {
+        // Enable Save and Dispose buttons, and disable others
+        btnSaveSimulation.setEnabled(true);
+        btnDisposeSimulation.setEnabled(true);
+
+        BtnLoadMap.setEnabled(false);
+        BtnRestrictGoods.setEnabled(false);
+        BtnDirectedWrld.setEnabled(false);
+        BtnPowerfulCity.setEnabled(false);
+        btnAnnihilateWrld.setEnabled(false);
+        btnChooseCityWipeOut.setEnabled(false);
+        btnClosestCon2Cities.setEnabled(false);
+        btnArmyCon2Cities.setEnabled(false);
+        BtnDivideWrld.setEnabled(false);
+        btnMostEfficientWipeOut.setEnabled(false);
+        btnMostConnectedCity.setEnabled(false);
+    }
+     private void enableAllButtons() {
+        btnSaveSimulation.setEnabled(false);
+        btnDisposeSimulation.setEnabled(false);
+        // Enable all resting buttons
+        BtnLoadMap.setEnabled(true);
+        BtnRestrictGoods.setEnabled(true);
+        BtnDirectedWrld.setEnabled(true);
+        btnAnnihilateWrld.setEnabled(true);
+        btnChooseCityWipeOut.setEnabled(true);
+        btnClosestCon2Cities.setEnabled(true);
+        btnArmyCon2Cities.setEnabled(true);
+        BtnDivideWrld.setEnabled(true);
+        btnMostEfficientWipeOut.setEnabled(true);
+        btnMostConnectedCity.setEnabled(true);
+    }
 
     /**
      * @param args the command line arguments
@@ -136,18 +308,21 @@ public class SkyNetUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BtnDirectedWrld;
+    private javax.swing.JButton BtnDivideWrld;
+    private javax.swing.JButton BtnLoadMap;
+    private javax.swing.JButton BtnPowerfulCity;
+    private javax.swing.JButton BtnRestrictGoods;
+    private javax.swing.JLabel JlActualMap;
+    private javax.swing.JLabel JlSimulatedDestruction;
     private javax.swing.JLabel LlbBackground;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton btnAnnihilateWrld;
+    private javax.swing.JButton btnArmyCon2Cities;
+    private javax.swing.JButton btnChooseCityWipeOut;
+    private javax.swing.JButton btnClosestCon2Cities;
+    private javax.swing.JButton btnDisposeSimulation;
+    private javax.swing.JButton btnMostConnectedCity;
+    private javax.swing.JButton btnMostEfficientWipeOut;
+    private javax.swing.JButton btnSaveSimulation;
     // End of variables declaration//GEN-END:variables
 }
