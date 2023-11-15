@@ -28,21 +28,36 @@ public class Graph {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Vertex> nodes = new ArrayList<Vertex>();
         try {
-            // Lee el archivo JSON y mapea los datos a un array de objetos Vertex
             Vertex[] vertices = objectMapper.readValue(new File(FILEPATH), Vertex[].class);
 
-            // Agrega los vértices al grafo
             nodes.addAll(Arrays.asList(vertices));            
             for (Vertex vertex : nodes) {
                 graph.addVertex(vertex);
             }
             
+            for (Vertex vertex : nodes) {
+                for (Edge edge : vertex.getEdges()) {
+                    Vertex toVertex = searchNodeByName(edge.getToVertex());
+                    if (toVertex != null && vertex != toVertex) {
+                        System.out.println("From: " + vertex.getVertex() + " To: " + toVertex.getVertex());
+                        graph.addEdge(vertex, toVertex);
+                    }
+                }
+            }
+
+                        
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        for (Vertex node : nodes) {
-            System.out.println(node.getVertex());
+    }
+    
+    public Vertex searchNodeByName(String vertexName){
+        for (Vertex vertex : graph.vertexSet()) {
+            if (vertex.getVertex().equals(vertexName)) {
+                return vertex;
+            }
         }
+        System.out.println("Node: " + vertexName);
+        return null;
     }
 }

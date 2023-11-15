@@ -16,14 +16,14 @@ public class Vertex {
     private int soldiers;
     private int missiles;
     private int techLevel;
-    //private ArrayList<Edge> edges;
+    private ArrayList<Edge> edges;
     
     public Vertex(){
         this.vertex = "";
         this.soldiers = -1;
         this.missiles = -1;
         this.techLevel = -1;
-        //this.edges = new ArrayList<Edge>();
+        this.edges = new ArrayList<Edge>();
     }
     
     public Vertex(String vertex, int soldiers, int missiles, int techLevel){
@@ -31,7 +31,7 @@ public class Vertex {
         this.soldiers = soldiers;
         this.missiles = missiles;
         this.techLevel = techLevel;
-        //this.edges = new ArrayList<Edge>();
+        this.edges = new ArrayList<Edge>();
     }
 
     public String getVertex() {
@@ -48,5 +48,9 @@ public class Vertex {
 
     public int getTechLevel() {
         return techLevel;
+    }
+
+    public ArrayList<Edge> getEdges() {
+        return edges;
     }
 }

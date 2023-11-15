@@ -9,19 +9,38 @@ package Graph;
  * @author fabri
  */
 public class Edge {
-    private Vertex toVertex;
+    private String toVertex;
     private int military;
     private int goods;
     private int distance;
     
-    public Edge(Vertex toVertex, int military, int goods, int distance){
+    public Edge(){
+        this.toVertex = "";
+        this.military = -1;
+        this.goods = -1;
+        this.distance = -1; 
+    }
+    
+    public Edge(String toVertex, int military, int goods, int distance){
         this.toVertex = toVertex;
         this.military = military;
         this.goods = goods;
         this.distance = distance;
     }
 
-    public Vertex getToVertex() {
+    public String getToVertex() {
         return toVertex;
+    }
+
+    public int getMilitary() {
+        return military;
+    }
+
+    public int getGoods() {
+        return goods;
+    }
+
+    public int getDistance() {
+        return distance;
     }
 }
