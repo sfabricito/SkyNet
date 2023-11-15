@@ -24,11 +24,11 @@ public class Graph {
         
     }
     
-    public void loadGraph(){
+    public void loadGraph(String route){
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Vertex> nodes = new ArrayList<Vertex>();
         try {
-            Vertex[] vertices = objectMapper.readValue(new File(FILEPATH), Vertex[].class);
+            Vertex[] vertices = objectMapper.readValue(new File(route), Vertex[].class);
 
             nodes.addAll(Arrays.asList(vertices));            
             for (Vertex vertex : nodes) {
@@ -39,7 +39,6 @@ public class Graph {
                 for (Edge edge : vertex.getEdges()) {
                     Vertex toVertex = searchNodeByName(edge.getToVertex());
                     if (toVertex != null && vertex != toVertex) {
-                        System.out.println("From: " + vertex.getVertex() + " To: " + toVertex.getVertex());
                         graph.addEdge(vertex, toVertex);
                     }
                 }
@@ -57,7 +56,6 @@ public class Graph {
                 return vertex;
             }
         }
-        System.out.println("Node: " + vertexName);
         return null;
     }
 }

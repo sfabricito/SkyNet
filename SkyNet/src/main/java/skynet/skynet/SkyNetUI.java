@@ -1,15 +1,16 @@
 
-package com.mycompany.skynet;
+package skynet.skynet;
+
+import Graph.Graph;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author pavel
  */
 public class SkyNetUI extends javax.swing.JFrame {
-
-    /**
-     * Creates new form SkyNetUI
-     */
+    Graph graph = new Graph();
     public SkyNetUI() {
         initComponents();
     }
@@ -142,7 +143,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         JlActualMap.setForeground(new java.awt.Color(255, 255, 255));
         JlActualMap.setText("Actual Map");
         getContentPane().add(JlActualMap);
-        JlActualMap.setBounds(70, 370, 260, 31);
+        JlActualMap.setBounds(70, 370, 260, 32);
 
         btnMostEfficientWipeOut.setText("Most Efficient Destruction");
         btnMostEfficientWipeOut.addActionListener(new java.awt.event.ActionListener() {
@@ -178,9 +179,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         JlSimulatedDestruction.setForeground(new java.awt.Color(102, 0, 51));
         JlSimulatedDestruction.setText("Simulated Destruction");
         getContentPane().add(JlSimulatedDestruction);
-        JlSimulatedDestruction.setBounds(810, 370, 260, 31);
-
-        LlbBackground.setIcon(new javax.swing.ImageIcon("C:\\Users\\pavel\\OneDrive\\Documents\\NetBeansProjects\\SkyNet\\SkyNet\\src\\main\\java\\Images\\BackGround.jpg")); // NOI18N
+        JlSimulatedDestruction.setBounds(810, 370, 260, 32);
         getContentPane().add(LlbBackground);
         LlbBackground.setBounds(0, 0, 1200, 660);
 
@@ -188,7 +187,22 @@ public class SkyNetUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnLoadMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLoadMapActionPerformed
-        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();                
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos JSON", "json");
+        fileChooser.setFileFilter(filter);
+        
+
+        // Mostrar el cuadro de diálogo para seleccionar un archivo
+        int result = fileChooser.showOpenDialog(this);
+
+        // Comprobar si el usuario seleccionó un archivo
+        if (result == JFileChooser.APPROVE_OPTION) {
+
+            // Obtener la ruta del archivo seleccionado
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            
+            graph.loadGraph(filePath);
+        }
     }//GEN-LAST:event_BtnLoadMapActionPerformed
 
     private void BtnDirectedWrldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDirectedWrldActionPerformed

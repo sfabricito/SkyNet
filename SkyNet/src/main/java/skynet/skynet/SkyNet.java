@@ -17,7 +17,7 @@ public class SkyNet {
         
         Graph graph = new Graph();
         
-        graph.loadGraph();
+        //graph.loadGraph();
         
         //graph.addEdge(vertex1, vertex3, new Edge());
     }
