@@ -1,0 +1,26 @@
+[
+    {
+      "vertex": "New York",
+      "soldiers": 4000,
+      "missiles": 3500,
+      "techLevel": 8
+    },
+    {
+      "vertex": "Boston",
+      "soldiers": 2300,
+      "missiles": 1800,
+      "techLevel": 5
+    },
+    {
+      "vertex": "Washington DC",
+      "soldiers": 4000,
+      "missiles": 3500,
+      "techLevel": 8
+    },
+    {
+      "vertex": "Atlanta",
+      "soldiers": 2300,
+      "missiles": 1800,
+      "techLevel": 5
+    }
+]
