@@ -58,4 +58,122 @@ public class Graph {
         }
         return null;
     }
+    //Algoritmo para el primer caso
+    //https://www.geeksforgeeks.org/java-program-to-check-whether-undirected-graph-is-connected-using-dfs/
+    /* static class Graph{ 
+          
+        int vertices; 
+        // Linked list for adjacency list of a vertex 
+        LinkedList<Integer> adjacencyList []; 
+  
+        @SuppressWarnings("unchecked") 
+        public Graph(int vertices) 
+        { 
+            this.vertices = vertices; 
+            adjacencyList = new LinkedList[vertices]; 
+            
+            for (int i = 0; i<vertices ; i++)  
+            { 
+                adjacencyList[i] = new LinkedList<>(); 
+            } 
+        } 
+          
+        // Function for adding edges 
+        public void addEdge(int source, int dest) 
+        { 
+            adjacencyList.addFirst(dest); 
+            adjacencyList[dest].addFirst(source); 
+        } 
+    } 
+  
+    // Function to check if the graph is connected or not 
+    public void isConnected(Graph graph){ 
+  
+        int vertices = graph.vertices; 
+        LinkedList<Integer> adjacencyList [] = graph.adjacencyList; 
+  
+        // Take a boolean visited array 
+        boolean[] visited = new boolean[vertices]; 
+  
+        // Start the DFS from vertex 0 
+        DFS(0, adjacencyList, visited); 
+  
+        // Check if all the vertices are visited 
+        // Set connected to False if one node is unvisited 
+        boolean connected = true; 
+        
+        for (int i = 0; i <visited.length ; i++) { 
+            if(!visited[i]){ 
+                connected = false; 
+                break; 
+            } 
+        } 
+        
+        if(connected){ 
+            System.out.println("Graph is connected"); 
+        }else{ 
+            System.out.println("Graph is disconnected"); 
+        } 
+    } 
+  
+    public void DFS(int source, LinkedList<Integer> adjacencyList [], boolean[] visited){ 
+  
+        // Mark the vertex visited as True 
+        visited = true; 
+  
+        // Travel the adjacent neighbours 
+        for (int i = 0; i <adjacencyList.size() ; i++) { 
+            
+            int neighbour = adjacencyList.get(i); 
+            
+            if(visited[neighbour]==false){ 
+                
+                // Call DFS from neighbour 
+                DFS(neighbour, adjacencyList, visited); 
+            } 
+        } 
+    //Implementar funcion que elimina vertice
+    }*/
+    
+    //Algoritmo para el segundo caso 
+    //https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/?ref=lbp
+    //O prims algorithm
+    
+    
+    //Algoritmo para el tercer caso
+    //https://www.geeksforgeeks.org/convert-undirected-connected-graph-to-strongly-connected-directed-graph/
+    //Algo similar
+    
+    //Algoritmo para el cuarto caso
+    //Djistra https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/?ref=lbp
+    
+    //Algoritmo para aniquilacion total quinto caso 
+    //https://www.geeksforgeeks.org/euler-circuit-directed-graph/?ref=lbp
+    
+    //Algoritmo para el sexto caso
+    //https://www.geeksforgeeks.org/eulerian-path-and-circuit/
+    //Relativo
+    
+    //Algoritmo para el setimo caso
+    //Djistra pero yo escogiendo las ciudades
+    
+    //Algoritmo para le octavo caso
+    //Djistra que sume mas por poder militar
+    
+    //Algortimo para el noveno caso
+    //Djistra pero que retorne todos los caminos y escoger que camino
+    
+    //Algoritmo para el decimo caso
+    //No entendi muy bien
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/?ref=lbp
 }
