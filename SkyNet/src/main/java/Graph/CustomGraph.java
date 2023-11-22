@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -16,11 +17,11 @@ import org.jgrapht.graph.SimpleGraph;
  *
  * @author fabri
  */
-public class Graph {
+public class CustomGraph {
     final private String FILEPATH = "src/main/java/Data/graph.json";
     private org.jgrapht.Graph<Vertex, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
     
-    public Graph(){
+    public CustomGraph(){
         
     }
     
@@ -39,12 +40,10 @@ public class Graph {
                 for (Edge edge : vertex.getEdges()) {
                     Vertex toVertex = searchNodeByName(edge.getToVertex());
                     if (toVertex != null && vertex != toVertex) {
-                        graph.addEdge(vertex, toVertex);
+                        graph.addEdge(vertex, toVertex, edge);
                     }
                 }
             }
-
-                        
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,5 +56,9 @@ public class Graph {
             }
         }
         return null;
+    }
+
+    public Graph<Vertex, DefaultEdge> getGraph() {
+        return graph;
     }
 }

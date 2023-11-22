@@ -4,11 +4,13 @@
  */
 package Graph;
 
+import org.jgrapht.graph.DefaultEdge;
+
 /**
  *
  * @author fabri
  */
-public class Edge {
+public class Edge extends DefaultEdge{
     private String toVertex;
     private int military;
     private int goods;

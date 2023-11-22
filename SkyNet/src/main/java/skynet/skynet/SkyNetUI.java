@@ -1,16 +1,29 @@
 
 package skynet.skynet;
 
-import Graph.Graph;
+import Graph.CustomGraph;
+import Graph.Vertex;
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.algorithms.layout.Layout;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.jgrapht.graph.DefaultEdge;
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.SparseGraph;
+import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.visualization.BasicVisualizationServer;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import javax.swing.JFrame;
+
+
 
 /**
  *
  * @author pavel
  */
 public class SkyNetUI extends javax.swing.JFrame {
-    Graph graph = new Graph();
+    CustomGraph graph = new CustomGraph();
     public SkyNetUI() {
         initComponents();
     }
@@ -24,6 +37,8 @@ public class SkyNetUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         BtnLoadMap = new javax.swing.JButton();
         BtnRestrictGoods = new javax.swing.JButton();
         btnDisposeSimulation = new javax.swing.JButton();
@@ -39,7 +54,9 @@ public class SkyNetUI extends javax.swing.JFrame {
         btnMostConnectedCity = new javax.swing.JButton();
         btnSaveSimulation = new javax.swing.JButton();
         JlSimulatedDestruction = new javax.swing.JLabel();
-        LlbBackground = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        scrollPanelActualMap = new javax.swing.JScrollPane();
+        panelActualMap = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1200, 670));
@@ -180,8 +197,20 @@ public class SkyNetUI extends javax.swing.JFrame {
         JlSimulatedDestruction.setText("Simulated Destruction");
         getContentPane().add(JlSimulatedDestruction);
         JlSimulatedDestruction.setBounds(810, 370, 260, 32);
-        getContentPane().add(LlbBackground);
-        LlbBackground.setBounds(0, 0, 1200, 660);
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1);
+        jButton1.setBounds(630, 570, 100, 35);
+
+        scrollPanelActualMap.setViewportView(panelActualMap);
+
+        getContentPane().add(scrollPanelActualMap);
+        scrollPanelActualMap.setBounds(50, 420, 520, 340);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -192,10 +221,10 @@ public class SkyNetUI extends javax.swing.JFrame {
         fileChooser.setFileFilter(filter);
         
 
-        // Mostrar el cuadro de diálogo para seleccionar un archivo
+        // Mostrar el cuadro de di�logo para seleccionar un archivo
         int result = fileChooser.showOpenDialog(this);
 
-        // Comprobar si el usuario seleccionó un archivo
+        // Comprobar si el usuario seleccion� un archivo
         if (result == JFileChooser.APPROVE_OPTION) {
 
             // Obtener la ruta del archivo seleccionado
@@ -253,6 +282,12 @@ public class SkyNetUI extends javax.swing.JFrame {
     private void btnClosestCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClosestCon2CitiesActionPerformed
         setupButtonState();
     }//GEN-LAST:event_btnClosestCon2CitiesActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        X graphV = new X();
+        graphV.run(panelActualMap);
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
     private void setupButtonState() {
         // Enable Save and Dispose buttons, and disable others
         btnSaveSimulation.setEnabled(true);
@@ -329,7 +364,6 @@ public class SkyNetUI extends javax.swing.JFrame {
     private javax.swing.JButton BtnRestrictGoods;
     private javax.swing.JLabel JlActualMap;
     private javax.swing.JLabel JlSimulatedDestruction;
-    private javax.swing.JLabel LlbBackground;
     private javax.swing.JButton btnAnnihilateWrld;
     private javax.swing.JButton btnArmyCon2Cities;
     private javax.swing.JButton btnChooseCityWipeOut;
@@ -338,5 +372,10 @@ public class SkyNetUI extends javax.swing.JFrame {
     private javax.swing.JButton btnMostConnectedCity;
     private javax.swing.JButton btnMostEfficientWipeOut;
     private javax.swing.JButton btnSaveSimulation;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel panelActualMap;
+    private javax.swing.JScrollPane scrollPanelActualMap;
     // End of variables declaration//GEN-END:variables
 }

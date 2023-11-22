@@ -1,8 +1,9 @@
+Graph\CustomGraph.class
 skynet\skynet\SkyNet.class
 skynet\skynet\SkyNetUI$1.class
 skynet\skynet\SkyNetUI$14.class
 skynet\skynet\SkyNetUI$7.class
-Graph\Graph.class
+skynet\skynet\SkyNetUI$15.class
 skynet\skynet\SkyNetUI$2.class
 Graph\Vertex.class
 skynet\skynet\SkyNetUI$6.class
@@ -14,6 +15,7 @@ skynet\skynet\SkyNetUI$4.class
 skynet\skynet\SkyNetUI.class
 skynet\skynet\SkyNetUI$10.class
 skynet\skynet\SkyNetUI$9.class
+skynet\skynet\X.class
 skynet\skynet\SkyNetUI$13.class
 skynet\skynet\SkyNetUI$3.class
 skynet\skynet\SkyNetUI$8.class

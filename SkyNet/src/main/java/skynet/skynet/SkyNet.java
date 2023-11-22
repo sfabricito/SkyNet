@@ -4,7 +4,7 @@
 
 package skynet.skynet;
 
-import Graph.Graph;
+import Graph.CustomGraph;
 
 /**
  *
@@ -15,9 +15,9 @@ public class SkyNet {
     public static void main(String[] args) {
         System.out.println("Hello World!");
         
-        Graph graph = new Graph();
+        CustomGraph graph = new CustomGraph();
         
-        //graph.loadGraph();
+        graph.loadGraph("src/main/java/Data/graph.json");
         
         //graph.addEdge(vertex1, vertex3, new Edge());
     }
