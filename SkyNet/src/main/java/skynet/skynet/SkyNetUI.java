@@ -231,6 +231,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             String filePath = fileChooser.getSelectedFile().getAbsolutePath();
             
             graph.loadGraph(filePath);
+            graph.paintGraph(panelActualMap);
         }
     }//GEN-LAST:event_BtnLoadMapActionPerformed
 
@@ -284,8 +285,7 @@ public class SkyNetUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClosestCon2CitiesActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        X graphV = new X();
-        graphV.run(panelActualMap);
+        graph.paintGraph(panelActualMap);
         
     }//GEN-LAST:event_jButton1ActionPerformed
     private void setupButtonState() {

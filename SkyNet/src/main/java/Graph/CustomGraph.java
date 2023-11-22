@@ -5,11 +5,19 @@
 package Graph;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.uci.ics.jung.algorithms.layout.CircleLayout;
+import edu.uci.ics.jung.graph.SparseGraph;
+import edu.uci.ics.jung.visualization.BasicVisualizationServer;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
 import org.jgrapht.graph.DefaultEdge;
@@ -51,6 +59,51 @@ public class CustomGraph {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public void paintGraph(JPanel panel){
+        edu.uci.ics.jung.graph.Graph<String, String> jungGraph = convertJGraphTtoJUNG(graph);
+        // Create JUNG visualization
+        BasicVisualizationServer<String, String> vv = new BasicVisualizationServer<>(new CircleLayout<>(jungGraph));
+        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+
+        // Set edge labels to be displayed
+        vv.getRenderContext().setEdgeLabelTransformer(edge -> edge);
+        
+        JFrame frame = new JFrame("Graph Visualization");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+
+        // Display the graph in a JFrame
+        panel.removeAll();
+        panel.add(vv);
+        panel.revalidate();
+        panel.repaint();
+        
+                // Add the graph visualization to the panel
+        panel.add(vv);
+    }
+    
+    private static edu.uci.ics.jung.graph.Graph<String, String> convertJGraphTtoJUNG(org.jgrapht.Graph<Vertex, DefaultEdge> jGraphTGraph) {
+        edu.uci.ics.jung.graph.Graph<String, String> jungGraph = new SparseGraph<>();
+
+        // Add vertices
+        Set<Vertex> vertices = jGraphTGraph.vertexSet();
+        for (Vertex vertex : vertices) {
+            jungGraph.addVertex(vertex.getVertex());
+        }
+
+        // Add edges
+        for (Vertex source : vertices) {
+            Set<DefaultEdge> outgoingEdges = jGraphTGraph.outgoingEdgesOf(source);
+            for (DefaultEdge edge : outgoingEdges) {
+                Vertex target = Graphs.getOppositeVertex(jGraphTGraph, edge, source);
+                String edgeIdentifier =  target.getVertex() + " ➡ " +  source.getVertex();
+                jungGraph.addEdge(edgeIdentifier, source.getVertex(), target.getVertex());
+            }
+        }
+
+        return jungGraph;
     }
     
     public Vertex searchNodeByName(String vertexName){

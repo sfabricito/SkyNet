@@ -78,5 +78,25 @@
         "distance": 900
       }
     ]
+  },
+  {
+    "vertex": "New Yersey",
+    "soldiers": 2300,
+    "missiles": 1800,
+    "techLevel": 5,
+    "edges": [
+      {
+        "toVertex": "Atlanta",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      },
+      {
+        "toVertex": "Boston",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      }
+    ]
   }
 ]
