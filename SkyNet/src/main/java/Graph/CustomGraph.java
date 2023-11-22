@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.jgrapht.Graph;
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
+import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -64,87 +66,33 @@ public class CustomGraph {
     public Graph<Vertex, DefaultEdge> getGraph() {
         return graph;
     }
-
-    //Algoritmo para el primer caso
-    //https://www.geeksforgeeks.org/java-program-to-check-whether-undirected-graph-is-connected-using-dfs/
-    /* static class Graph{ 
-          
-        int vertices; 
-        // Linked list for adjacency list of a vertex 
-        LinkedList<Integer> adjacencyList []; 
-  
-        @SuppressWarnings("unchecked") 
-        public Graph(int vertices) 
-        { 
-            this.vertices = vertices; 
-            adjacencyList = new LinkedList[vertices]; 
-            
-            for (int i = 0; i<vertices ; i++)  
-            { 
-                adjacencyList[i] = new LinkedList<>(); 
-            } 
-        } 
-          
-        // Function for adding edges 
-        public void addEdge(int source, int dest) 
-        { 
-            adjacencyList.addFirst(dest); 
-            adjacencyList[dest].addFirst(source); 
-        } 
-    } 
-  
-    // Function to check if the graph is connected or not 
-    public void isConnected(Graph graph){ 
-  
-        int vertices = graph.vertices; 
-        LinkedList<Integer> adjacencyList [] = graph.adjacencyList; 
-  
-        // Take a boolean visited array 
-        boolean[] visited = new boolean[vertices]; 
-  
-        // Start the DFS from vertex 0 
-        DFS(0, adjacencyList, visited); 
-  
-        // Check if all the vertices are visited 
-        // Set connected to False if one node is unvisited 
-        boolean connected = true; 
-        
-        for (int i = 0; i <visited.length ; i++) { 
-            if(!visited[i]){ 
-                connected = false; 
-                break; 
-            } 
-        } 
-        
-        if(connected){ 
-            System.out.println("Graph is connected"); 
-        }else{ 
-            System.out.println("Graph is disconnected"); 
-        } 
-    } 
-  
-    public void DFS(int source, LinkedList<Integer> adjacencyList [], boolean[] visited){ 
-  
-        // Mark the vertex visited as True 
-        visited = true; 
-  
-        // Travel the adjacent neighbours 
-        for (int i = 0; i <adjacencyList.size() ; i++) { 
-            
-            int neighbour = adjacencyList.get(i); 
-            
-            if(visited[neighbour]==false){ 
-                
-                // Call DFS from neighbour 
-                DFS(neighbour, adjacencyList, visited); 
-            } 
-        } 
-    //Implementar funcion que elimina vertice
-    }*/
     
+    public static boolean isConnected(Graph<Vertex, DefaultEdge> graph) {
+        // Use JGraphT's ConnectivityInspector to check if the graph is connected
+        ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
+        return connectivityInspector.isConnected();
+    }
     //Algoritmo para el segundo caso 
     //https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/?ref=lbp
     //O prims algorithm
+    /*
+    public void runKruskalAlgorithm() {
+        // Apply Kruskal's algorithm to find the minimum spanning tree
+        KruskalMinimumSpanningTree<Vertex, DefaultEdge> kruskal =
+                new KruskalMinimumSpanningTree<>(graph);
+
+        // Get the minimum spanning tree as a graph
+        Graph<Vertex, DefaultEdge> minimumSpanningTree = kruskal.getSpanningTree();
+
+        // Print or process the minimum spanning tree as needed
+        System.out.println("Minimum Spanning Tree Edges:");
+        for (DefaultEdge edge : minimumSpanningTree.edgeSet()) {
+            Vertex source = graph.getEdgeSource(edge);
+            Vertex target = graph.getEdgeTarget(edge);
+            System.out.println(source + " -- " + target);
+        }
+    }*/
+
     
     
     //Algoritmo para el tercer caso
@@ -156,6 +104,7 @@ public class CustomGraph {
     
     //Algoritmo para aniquilacion total quinto caso 
     //https://www.geeksforgeeks.org/euler-circuit-directed-graph/?ref=lbp
+
     
     //Algoritmo para el sexto caso
     //https://www.geeksforgeeks.org/eulerian-path-and-circuit/
