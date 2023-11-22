@@ -40,10 +40,12 @@ public class CustomGraph {
                 for (Edge edge : vertex.getEdges()) {
                     Vertex toVertex = searchNodeByName(edge.getToVertex());
                     if (toVertex != null && vertex != toVertex) {
-                        graph.addEdge(vertex, toVertex, edge);
+                        graph.addEdge(vertex, toVertex);
                     }
                 }
             }
+
+                        
         } catch (IOException e) {
             e.printStackTrace();
         }
