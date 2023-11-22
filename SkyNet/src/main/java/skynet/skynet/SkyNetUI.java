@@ -15,6 +15,7 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 
 
@@ -246,6 +247,9 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void btnArmyCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArmyCon2CitiesActionPerformed
         setupButtonState();
+        
+        String city1 = showInputDialog("Enter the name of the first city interested in:");
+        String city2 = showInputDialog("Enter the name of the second city interested in:");
     }//GEN-LAST:event_btnArmyCon2CitiesActionPerformed
 
     private void btnDisposeSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisposeSimulationActionPerformed
@@ -282,8 +286,15 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void btnClosestCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClosestCon2CitiesActionPerformed
         setupButtonState();
+        
+        String city1 = showInputDialog("Enter the name of the first city interested in:");
+        String city2 = showInputDialog("Enter the name of the second city interested in:");
     }//GEN-LAST:event_btnClosestCon2CitiesActionPerformed
-
+    
+    private String showInputDialog(String message) {
+        return JOptionPane.showInputDialog(this, message);
+    }
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         graph.paintGraph(panelActualMap);
         

@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package Graph;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,12 +10,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
+import org.jgrapht.alg.interfaces.SpanningTreeAlgorithm;
 import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
@@ -120,33 +122,114 @@ public class CustomGraph {
         return graph;
     }
     
-    public static boolean isConnected(Graph<Vertex, DefaultEdge> graph) {
-        // Use JGraphT's ConnectivityInspector to check if the graph is connected
-        ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
-        return connectivityInspector.isConnected();
+    public void disconnectGraph() {
+        // Check if the graph is already disconnected
+        ConnectivityInspector<Vertex, DefaultEdge> initialConnectivityInspector = new ConnectivityInspector<>(graph);
+        if (!initialConnectivityInspector.isConnected()) {
+            System.out.println("The graph is already disconnected. No vertices will be removed.");
+            return;
+        }
+
+        Set<Vertex> verticesToRemove = new HashSet<>();
+
+        // Iterate through each vertex in the graph
+        for (Vertex vertex : graph.vertexSet()) {
+            // Create a temporary graph without the current vertex
+            Graph<Vertex, DefaultEdge> tempGraph = new SimpleGraph<>(DefaultEdge.class);
+            Set<Vertex> remainingVertices = new HashSet<>(graph.vertexSet());
+            remainingVertices.remove(vertex);
+
+            // Add vertices and edges to the temporary graph
+            for (Vertex v : remainingVertices) {
+                tempGraph.addVertex(v);
+                for (DefaultEdge edge : graph.edgesOf(v)) {
+                    Vertex oppositeVertex = Graphs.getOppositeVertex(graph, edge, v);
+                    if (remainingVertices.contains(oppositeVertex)) {
+                        tempGraph.addEdge(v, oppositeVertex);
+                    }
+                }
+            }
+
+            // Check if the temporary graph is connected
+            ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(tempGraph);
+            if (!connectivityInspector.isConnected()) {
+                // If disconnected, add the current vertex to verticesToRemove and stop further attempts
+                if (verticesToRemove.isEmpty()) {
+                    verticesToRemove.add(vertex);
+                }
+                break;
+            }
+        }
+
+        // Remove the identified vertices from the original graph
+        for (Vertex v : verticesToRemove) {
+            graph.removeVertex(v);
+        }
     }
+    //Probar con eliminar varios para volver disconexo, se supone que individual funciona bien 
+    
+    
+    
+    
     //Algoritmo para el segundo caso 
     //https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/?ref=lbp
-    //O prims algorithm
-    /*
-    public void runKruskalAlgorithm() {
-        // Apply Kruskal's algorithm to find the minimum spanning tree
-        KruskalMinimumSpanningTree<Vertex, DefaultEdge> kruskal =
-                new KruskalMinimumSpanningTree<>(graph);
+    public void visualizeMinimumSpanningTreeByGoods() {
+        // Check if the graph is connected
+        ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
+        if (!connectivityInspector.isConnected()) {
+            System.out.println("The graph is not connected. Cannot visualize minimum spanning tree.");
+            return;
+        }
+
+        // Apply Kruskal's algorithm to find the minimum spanning tree based on goods
+
+    KruskalMinimumSpanningTree<Vertex, DefaultEdge> kruskal =
+        new KruskalMinimumSpanningTree<>(graph);
+
+    Graph<Vertex, DefaultEdge> minimumSpanningTreeGraph = (Graph<Vertex, DefaultEdge>) kruskal.getSpanningTree();
+    List<DefaultEdge> sortedEdges = minimumSpanningTreeGraph
+        .edgeSet()
+        .stream()
+        .sorted(Comparator.comparingDouble(e -> ((Edge) e).getGoods()))
+        .collect(Collectors.toList());
+
 
         // Get the minimum spanning tree as a graph
-        Graph<Vertex, DefaultEdge> minimumSpanningTree = kruskal.getSpanningTree();
+        Graph<Vertex, DefaultEdge> minimumSpanningTree = new SimpleGraph<>(DefaultEdge.class);
+        Graphs.addAllVertices(minimumSpanningTree, graph.vertexSet());
+        for (DefaultEdge edge : kruskal.getSpanningTree().getEdges()) {
+            minimumSpanningTree.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge));
+        }
 
         // Print or process the minimum spanning tree as needed
         System.out.println("Minimum Spanning Tree Edges:");
         for (DefaultEdge edge : minimumSpanningTree.edgeSet()) {
             Vertex source = graph.getEdgeSource(edge);
             Vertex target = graph.getEdgeTarget(edge);
-            System.out.println(source + " -- " + target);
+            System.out.println(source + " -- " + target + " Goods: " + ((Edge) edge).getGoods());
         }
-    }*/
 
+        // Visualize the minimum spanning tree (You can replace this with your own visualization logic)
+        visualizeGraph(minimumSpanningTree);
+
+        // Annul the corresponding edges in the original graph
+        for (DefaultEdge edge : minimumSpanningTree.edgeSet()) {
+            graph.removeEdge(edge);
+        }
+
+        // Visualize the graph after annulment (You can replace this with your own visualization logic)
+        visualizeGraph(graph);
+    }
     
+    private void visualizeGraph(Graph<Vertex, DefaultEdge> graphToVisualize) {
+        System.out.println("Visualizing Graph:");
+        for (DefaultEdge edge : graphToVisualize.edgeSet()) {
+            Vertex source = graphToVisualize.getEdgeSource(edge);
+            Vertex target = graphToVisualize.getEdgeTarget(edge);
+            System.out.println(source + " -- " + target + " Goods: " + ((Edge) edge).getGoods());
+        }
+    }
+
     
     //Algoritmo para el tercer caso
     //https://www.geeksforgeeks.org/convert-undirected-connected-graph-to-strongly-connected-directed-graph/
