@@ -1,4 +1,3 @@
-
 package Graph;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,21 +9,34 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
-import org.jgrapht.alg.interfaces.SpanningTreeAlgorithm;
+
+
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.GraphWalk;
+import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.graph.SimpleGraph;
-
+import skynet.skynet.SkyNetUI;
 /**
  *
  * @author fabri
@@ -32,9 +44,13 @@ import org.jgrapht.graph.SimpleGraph;
 public class CustomGraph {
     final private String FILEPATH = "src/main/java/Data/graph.json";
     private org.jgrapht.Graph<Vertex, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
+    public SkyNetUI window;
+
+    public CustomGraph() {
+    }
     
-    public CustomGraph(){
-        
+    public CustomGraph(SkyNetUI window){
+        this.window=window;
     }
     
     public void loadGraph(String route){
@@ -168,8 +184,7 @@ public class CustomGraph {
     }
     //Probar con eliminar varios para volver disconexo, se supone que individual funciona bien 
     
-    
-    
+       
     
     //Algoritmo para el segundo caso 
     //https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/?ref=lbp
@@ -230,7 +245,6 @@ public class CustomGraph {
         }
     }
 
-    
     //Algoritmo para el tercer caso
     //https://www.geeksforgeeks.org/convert-undirected-connected-graph-to-strongly-connected-directed-graph/
     //Algo similar
@@ -238,34 +252,312 @@ public class CustomGraph {
     //Algoritmo para el cuarto caso
     //Djistra https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/?ref=lbp
     
+    
     //Algoritmo para aniquilacion total quinto caso 
     //https://www.geeksforgeeks.org/euler-circuit-directed-graph/?ref=lbp
+    public void totalAnnihilation() {
+        // Check if the graph is connected
+        ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
+        if (!connectivityInspector.isConnected()) {
+            System.out.println("The graph is not connected. Total annihilation not possible.");
+            window.AnnihilationNotPosibleNotConnected();
+            return;
+        }
+
+        // Check if the degrees are suitable for Eulerian circuit
+        if (!checkDegreesForEulerianCircuit()) {
+            System.out.println("In-degree and out-degree are not equal for each vertex. Total annihilation not possible.");
+            window.AnnihilationNotPosibleNotEven();
+            return;
+        }
+
+        // Find an Eulerian circuit
+        List<Vertex> eulerianCircuit = findEulerianCircuit();
+
+        // Display the Eulerian circuit
+        System.out.println("Eulerian Circuit (Total Annihilation):");
+        for (int i = 0; i < eulerianCircuit.size() - 1; i++) {
+            Vertex source = eulerianCircuit.get(i);
+            Vertex target = eulerianCircuit.get(i + 1);
+            DefaultEdge edge = graph.getEdge(source, target);
+            System.out.println(source + " -- " + target);
+        }
+        window.AnnihilationPosible();
+    }
+
+    private boolean checkDegreesForEulerianCircuit() {
+        for (Vertex vertex : graph.vertexSet()) {
+            int degree = graph.degreeOf(vertex);
+            if (degree % 2 != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private List<Vertex> findEulerianCircuit() {
+        // Create a copy of the graph to modify during the algorithm
+        Graph<Vertex, DefaultEdge> copyGraph = new SimpleDirectedGraph<>(DefaultEdge.class);
+        Graphs.addAllVertices(copyGraph, graph.vertexSet());
+
+        // Instead of using Graphs.addAllEdges, manually add edges to the copyGraph
+        for (DefaultEdge edge : graph.edgeSet()) {
+            Vertex source = graph.getEdgeSource(edge);
+            Vertex target = graph.getEdgeTarget(edge);
+            copyGraph.addEdge(source, target);
+        }
+        // Initialize the stack to store the circuit
+        Deque<Vertex> circuitStack = new LinkedList<>();
+
+        // Initialize the final circuit
+        List<Vertex> eulerianCircuit = new ArrayList<>();
+
+        // Select a starting vertex
+        Vertex startVertex = copyGraph.vertexSet().iterator().next();
+        circuitStack.push(startVertex);
+
+        while (!circuitStack.isEmpty()) {
+            Vertex currentVertex = circuitStack.peek();
+
+            if (copyGraph.outDegreeOf(currentVertex) > 0) {
+                // If there are outgoing edges, choose a neighbor and remove the edge
+                Vertex nextVertex = Graphs.successorListOf(copyGraph, currentVertex).get(0);
+                DefaultEdge edge = copyGraph.getEdge(currentVertex, nextVertex);
+                copyGraph.removeEdge(edge);
+                circuitStack.push(nextVertex);
+            } else {
+                // If no outgoing edges, pop the stack and add the vertex to the circuit
+                circuitStack.pop();
+                eulerianCircuit.add(currentVertex);
+            }
+        }
+
+        // Reverse the circuit to get the correct order
+        Collections.reverse(eulerianCircuit);
+
+        return eulerianCircuit;
+    }
 
     
     //Algoritmo para el sexto caso
     //https://www.geeksforgeeks.org/eulerian-path-and-circuit/
     //Relativo
+        public void findAndRemoveMostVisitedVertices() {
+        // Check if the graph is connected
+        ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
+        if (!connectivityInspector.isConnected()) {
+            System.out.println("The graph is not connected. Cannot find and remove most visited vertices.");
+            return;
+        }
+
+        // Find an Eulerian circuit
+        List<Vertex> eulerianCircuit = findEulerianCircuit();
+
+        // Count the occurrences of each vertex in the circuit
+        Map<Vertex, Integer> vertexVisitCount = new HashMap<>();
+        for (Vertex vertex : eulerianCircuit) {
+            vertexVisitCount.put(vertex, vertexVisitCount.getOrDefault(vertex, 0) + 1);
+        }
+
+        // Find the vertices with the maximum visit count
+        int maxVisitCount = 0;
+        for (int count : vertexVisitCount.values()) {
+            maxVisitCount = Math.max(maxVisitCount, count);
+        }
+        
+        final int finalMaxVisitCount = maxVisitCount;
+        
+        // Remove vertices with the maximum visit count
+        Set<Vertex> verticesToRemove = vertexVisitCount.entrySet().stream()
+                .filter(entry -> entry.getValue() == finalMaxVisitCount)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
+
+        for (Vertex vertex : verticesToRemove) {
+            graph.removeVertex(vertex);
+        }
+
+        // Print the Eulerian circuit and removed vertices
+        System.out.println("Eulerian Circuit (Total Annihilation):");
+        for (int i = 0; i < eulerianCircuit.size() - 1; i++) {
+            Vertex source = eulerianCircuit.get(i);
+            Vertex target = eulerianCircuit.get(i + 1);
+            DefaultEdge edge = graph.getEdge(source, target);
+            System.out.println(source + " -- " + target);
+        }
+
+        System.out.println("Vertices Removed:");
+        verticesToRemove.forEach(System.out::println);
+
+        // Visualize the updated graph (You can replace this with your own visualization logic)
+        visualizeGraph(graph);
+    }
     
     //Algoritmo para el setimo caso
     //Djistra pero yo escogiendo las ciudades
     
+    // Use Dijkstra's algorithm to find the shortest path with only the "distance" attribute
+    /*
+    public void removeShortestPath(String startCity, String endCity) {
+        DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
+                new DijkstraShortestPath<>(graph, edge -> (double) ((Edge) edge).getDistance());
+
+        SingleSourcePaths<Vertex, DefaultEdge> paths = dijkstra.getPaths(searchNodeByName(startCity));
+        GraphPath<Vertex, DefaultEdge> shortestPath = paths.getPath(searchNodeByName(endCity));
+
+        if (shortestPath == null) {
+            System.out.println("No path found from " + startCity + " to " + endCity);
+            return;
+        }
+
+        // Print the shortest path with distances
+        System.out.println("Shortest Path from " + startCity + " to " + endCity + ":");
+        for (DefaultEdge edge : shortestPath.getEdgeList()) {
+            Vertex source = graph.getEdgeSource(edge);
+            Vertex target = graph.getEdgeTarget(edge);
+            System.out.println(source + " -- " + target + " Distance: " + ((Edge) edge).getDistance());
+        }
+
+        // Remove the shortest path from the graph
+        for (DefaultEdge edge : shortestPath.getEdgeList()) {
+            Vertex source = graph.getEdgeSource(edge);
+            Vertex target = graph.getEdgeTarget(edge);
+            graph.removeEdge(graph.getEdge(source, target));
+        }
+
+        // Visualize the updated graph
+        System.out.println("Updated Graph:");
+        visualizeGraph(graph);
+    }
+    */
+    
     //Algoritmo para le octavo caso
     //Djistra que sume mas por poder militar
+    /*
+    public void removeStrongestArmyPath(String startCity, String endCity) {
+        DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
+                new DijkstraShortestPath<>(graph, edge -> (double) ((Edge) edge).getMilitary());
+
+        SingleSourcePaths<Vertex, DefaultEdge> paths = dijkstra.getPaths(searchNodeByName(startCity));
+        GraphPath<Vertex, DefaultEdge> StrongestArmyPath = paths.getPath(searchNodeByName(endCity));
+
+        if (StrongestArmyPath == null) {
+            System.out.println("No path found from " + startCity + " to " + endCity);
+            return;
+        }
+
+        // Print the shortest path with distances
+        System.out.println("Strongest Path from " + startCity + " to " + endCity + ":");
+        for (DefaultEdge edge : StrongestArmyPath.getEdgeList()) {
+            Vertex source = graph.getEdgeSource(edge);
+            Vertex target = graph.getEdgeTarget(edge);
+            System.out.println(source + " -- " + target + " Military Strenght: " + ((Edge) edge).getMilitary());
+        }
+
+        // Remove the shortest path from the graph
+        for (DefaultEdge edge : StrongestArmyPath.getEdgeList()) {
+            Vertex source = graph.getEdgeSource(edge);
+            Vertex target = graph.getEdgeTarget(edge);
+            graph.removeEdge(graph.getEdge(source, target));
+        }
+
+        // Visualize the updated graph
+        System.out.println("Updated Graph:");
+        visualizeGraph(graph);
+    }
+    */
     
     //Algortimo para el noveno caso
     //Djistra pero que retorne todos los caminos y escoger que camino
+    /*
+    public void findAndRemovePaths(String startCity, String endCity) {
+        // Find all paths using a modified DFS approach
+        List<GraphPath<Vertex, DefaultEdge>> allPaths = findAllPaths(graph, searchNodeByName(startCity), searchNodeByName(endCity));
+
+        if (allPaths.isEmpty()) {
+            System.out.println("No path found from " + startCity + " to " + endCity);
+            return;
+        }
+
+        // Print all paths and their weights
+        for (int i = 0; i < allPaths.size(); i++) {
+            GraphPath<Vertex, DefaultEdge> path = allPaths.get(i);
+            System.out.println("Path " + (i + 1) + ": " + path.getVertexList());
+
+            // Display weights for each characteristic (e.g., goods, distance, military)
+            for (DefaultEdge edge : path.getEdgeList()) {
+                Edge edgeInfo = (Edge) edge;
+                System.out.println("  Goods: " + edgeInfo.getGoods() +
+                        ", Distance: " + edgeInfo.getDistance() +
+                        ", Military: " + edgeInfo.getMilitary());
+            }
+
+            System.out.println();
+        }
+
+        // Allow Skynet to choose and remove a path
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of the path to remove (1-" + allPaths.size() + "): ");
+        int selectedPathIndex = scanner.nextInt();
+
+        if (selectedPathIndex >= 1 && selectedPathIndex <= allPaths.size()) {
+            GraphPath<Vertex, DefaultEdge> pathToRemove = allPaths.get(selectedPathIndex - 1);
+            for (DefaultEdge edge : pathToRemove.getEdgeList()) {
+                graph.removeEdge(edge);
+            }
+            System.out.println("Path removed: " + pathToRemove.getVertexList());
+        } else {
+            System.out.println("Invalid input. No path removed.");
+        }
+
+        // Visualize the updated graph (You can replace this with your own visualization logic)
+        visualizeGraph(graph);
+    }
+
     
-    //Algoritmo para el decimo caso
-    //No entendi muy bien
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    private List<GraphPath<Vertex, DefaultEdge>> findAllPaths(Graph<Vertex, DefaultEdge> graph, Vertex startVertex, Vertex endVertex) {
+    List<GraphPath<Vertex, DefaultEdge>> allPaths = new ArrayList<>();
+    List<Vertex> currentPath = new ArrayList<>();
+    Set<Vertex> visited = new HashSet<>();
+
+    findAllPathsDFS(graph, startVertex, endVertex, visited, currentPath, allPaths);
+
+    return allPaths;
+    }
+
+    private void findAllPathsDFS(
+            Graph<Vertex, DefaultEdge> graph,
+            Vertex currentVertex,
+            Vertex endVertex,
+            Set<Vertex> visited,
+            List<Vertex> currentPath,
+            List<GraphPath<Vertex, DefaultEdge>> allPaths
+    ) {
+        visited.add(currentVertex);
+        currentPath.add(currentVertex);
+
+        if (currentVertex.equals(endVertex)) {
+            // Found a path, add it to the list
+            List<DefaultEdge> edgeList = new ArrayList<>();
+            for (int i = 0; i < currentPath.size() - 1; i++) {
+                edgeList.add(graph.getEdge(currentPath.get(i), currentPath.get(i + 1)));
+            }
+            GraphPath<Vertex, DefaultEdge> path = new GraphWalk<>(graph, currentPath, edgeList, 0.0);
+            allPaths.add(path);
+        } else {
+            for (Vertex neighbor : Graphs.neighborSetOf(graph, currentVertex)) {
+                if (!visited.contains(neighbor)) {
+                    findAllPathsDFS(graph, neighbor, endVertex, visited, currentPath, allPaths);
+                }
+            }
+        }
+
+        visited.remove(currentVertex);
+        currentPath.remove(currentPath.size() - 1);
+    }*/
+
+
+
     
     //https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/?ref=lbp
 }

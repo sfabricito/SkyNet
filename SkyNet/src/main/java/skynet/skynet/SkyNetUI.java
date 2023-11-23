@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
  * @author pavel
  */
 public class SkyNetUI extends javax.swing.JFrame {
-    CustomGraph graph = new CustomGraph();
+    CustomGraph graph = new CustomGraph(this);
     public SkyNetUI() {
         initComponents();
     }
@@ -54,6 +54,8 @@ public class SkyNetUI extends javax.swing.JFrame {
         btnMostEfficientWipeOut = new javax.swing.JButton();
         btnMostConnectedCity = new javax.swing.JButton();
         btnSaveSimulation = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
         JlSimulatedDestruction = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         scrollPanelActualMap = new javax.swing.JScrollPane();
@@ -161,7 +163,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         JlActualMap.setForeground(new java.awt.Color(255, 255, 255));
         JlActualMap.setText("Actual Map");
         getContentPane().add(JlActualMap);
-        JlActualMap.setBounds(70, 370, 260, 32);
+        JlActualMap.setBounds(70, 370, 260, 31);
 
         btnMostEfficientWipeOut.setText("Most Efficient Destruction");
         btnMostEfficientWipeOut.addActionListener(new java.awt.event.ActionListener() {
@@ -193,11 +195,22 @@ public class SkyNetUI extends javax.swing.JFrame {
         getContentPane().add(btnSaveSimulation);
         btnSaveSimulation.setBounds(1060, 370, 110, 30);
 
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList1.setEnabled(false);
+        jScrollPane1.setViewportView(jList1);
+
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(500, 20, 250, 130);
+
         JlSimulatedDestruction.setFont(new java.awt.Font("Source Sans Pro", 1, 24)); // NOI18N
         JlSimulatedDestruction.setForeground(new java.awt.Color(102, 0, 51));
         JlSimulatedDestruction.setText("Simulated Destruction");
         getContentPane().add(JlSimulatedDestruction);
-        JlSimulatedDestruction.setBounds(810, 370, 260, 32);
+        JlSimulatedDestruction.setBounds(810, 370, 260, 31);
 
         jButton1.setText("jButton1");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -206,7 +219,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(630, 570, 100, 35);
+        jButton1.setBounds(630, 570, 70, 28);
 
         scrollPanelActualMap.setViewportView(panelActualMap);
 
@@ -294,7 +307,15 @@ public class SkyNetUI extends javax.swing.JFrame {
     private String showInputDialog(String message) {
         return JOptionPane.showInputDialog(this, message);
     }
-    
+    public void AnnihilationPosible(){
+        JOptionPane.showMessageDialog(null, "Annihilation is possible!", "Annihilation Status", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void AnnihilationNotPosibleNotEven(){
+        JOptionPane.showMessageDialog(null, "Annihilation is not possible. In-degree and out-degree are not equal for each vertex.", "Annihilation Status", JOptionPane.WARNING_MESSAGE);
+    }
+    public void AnnihilationNotPosibleNotConnected(){
+        JOptionPane.showMessageDialog(null, "Annihilation is not possible. The graph is not connected.", "Annihilation Status", JOptionPane.WARNING_MESSAGE);
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         graph.paintGraph(panelActualMap);
         
@@ -384,8 +405,10 @@ public class SkyNetUI extends javax.swing.JFrame {
     private javax.swing.JButton btnMostEfficientWipeOut;
     private javax.swing.JButton btnSaveSimulation;
     private javax.swing.JButton jButton1;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelActualMap;
     private javax.swing.JScrollPane scrollPanelActualMap;
     // End of variables declaration//GEN-END:variables
