@@ -59,9 +59,9 @@ public class SkyNetUI extends javax.swing.JFrame {
         ScrollPathList = new javax.swing.JScrollPane();
         PathLIst = new javax.swing.JList<>();
         JlSimulatedDestruction = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         scrollPanelActualMap = new javax.swing.JScrollPane();
         panelActualMap = new javax.swing.JPanel();
+        panelSim = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1200, 820));
@@ -207,7 +207,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         ScrollPathList.setViewportView(PathLIst);
 
         getContentPane().add(ScrollPathList);
-        ScrollPathList.setBounds(440, 60, 250, 130);
+        ScrollPathList.setBounds(950, 20, 250, 130);
 
         JlSimulatedDestruction.setFont(new java.awt.Font("Source Sans Pro", 1, 24)); // NOI18N
         JlSimulatedDestruction.setForeground(new java.awt.Color(102, 0, 51));
@@ -215,19 +215,12 @@ public class SkyNetUI extends javax.swing.JFrame {
         getContentPane().add(JlSimulatedDestruction);
         JlSimulatedDestruction.setBounds(810, 370, 260, 31);
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton1);
-        jButton1.setBounds(630, 570, 70, 28);
-
         scrollPanelActualMap.setViewportView(panelActualMap);
 
         getContentPane().add(scrollPanelActualMap);
-        scrollPanelActualMap.setBounds(50, 420, 520, 340);
+        scrollPanelActualMap.setBounds(50, 410, 520, 340);
+        getContentPane().add(panelSim);
+        panelSim.setBounds(660, 410, 510, 330);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -274,6 +267,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         int dialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to dispose the simulation?", "Dispose Simulation", JOptionPane.YES_NO_OPTION);
         if (dialogResult == JOptionPane.YES_OPTION) {
         // User clicked Yes, dispose the simulation
+        panelSim.removeAll();
         enableAllButtons();
         }
     }//GEN-LAST:event_btnDisposeSimulationActionPerformed
@@ -338,12 +332,7 @@ public class SkyNetUI extends javax.swing.JFrame {
     }
     public void AnnihilationNotPosibleNotConnected(){
         JOptionPane.showMessageDialog(null, "Annihilation is not possible. The graph is not connected.", "Annihilation Status", JOptionPane.WARNING_MESSAGE);
-    }
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        graph.paintGraph(panelActualMap);
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
-    private void setupButtonState() {
+    }    private void setupButtonState() {
         // Enable Save and Dispose buttons, and disable others
         btnSaveSimulation.setEnabled(true);
         btnDisposeSimulation.setEnabled(true);
@@ -429,10 +418,10 @@ public class SkyNetUI extends javax.swing.JFrame {
     private javax.swing.JButton btnMostConnectedCity;
     private javax.swing.JButton btnMostEfficientWipeOut;
     private javax.swing.JButton btnSaveSimulation;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel panelActualMap;
+    private javax.swing.JPanel panelSim;
     private javax.swing.JScrollPane scrollPanelActualMap;
     // End of variables declaration//GEN-END:variables
 }
