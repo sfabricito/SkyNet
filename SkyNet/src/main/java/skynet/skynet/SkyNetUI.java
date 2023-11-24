@@ -255,6 +255,8 @@ public class SkyNetUI extends javax.swing.JFrame {
     private void BtnDirectedWrldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDirectedWrldActionPerformed
         setupButtonState();
         BtnPowerfulCity.setEnabled(true);
+        graph.convertToDirectGraph();
+        graph.paintGraph(panelActualMap);
     }//GEN-LAST:event_BtnDirectedWrldActionPerformed
 
     private void BtnPowerfulCityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPowerfulCityActionPerformed
