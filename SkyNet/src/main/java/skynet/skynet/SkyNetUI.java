@@ -14,6 +14,7 @@ import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -27,6 +28,7 @@ public class SkyNetUI extends javax.swing.JFrame {
     CustomGraph graph = new CustomGraph(this);
     public SkyNetUI() {
         initComponents();
+        ScrollPathList.setVisible(false);
     }
 
     /**
@@ -54,15 +56,15 @@ public class SkyNetUI extends javax.swing.JFrame {
         btnMostEfficientWipeOut = new javax.swing.JButton();
         btnMostConnectedCity = new javax.swing.JButton();
         btnSaveSimulation = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        ScrollPathList = new javax.swing.JScrollPane();
+        PathLIst = new javax.swing.JList<>();
         JlSimulatedDestruction = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         scrollPanelActualMap = new javax.swing.JScrollPane();
         panelActualMap = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(1200, 670));
+        setMinimumSize(new java.awt.Dimension(1200, 820));
         getContentPane().setLayout(null);
 
         BtnLoadMap.setText("Load Map");
@@ -195,16 +197,17 @@ public class SkyNetUI extends javax.swing.JFrame {
         getContentPane().add(btnSaveSimulation);
         btnSaveSimulation.setBounds(1060, 370, 110, 30);
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        ScrollPathList.setEnabled(false);
+
+        PathLIst.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList1.setEnabled(false);
-        jScrollPane1.setViewportView(jList1);
+        ScrollPathList.setViewportView(PathLIst);
 
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(500, 20, 250, 130);
+        getContentPane().add(ScrollPathList);
+        ScrollPathList.setBounds(440, 60, 250, 130);
 
         JlSimulatedDestruction.setFont(new java.awt.Font("Source Sans Pro", 1, 24)); // NOI18N
         JlSimulatedDestruction.setForeground(new java.awt.Color(102, 0, 51));
@@ -260,13 +263,17 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void btnArmyCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArmyCon2CitiesActionPerformed
         setupButtonState();
-        
-        String city1 = showInputDialog("Enter the name of the first city interested in:");
-        String city2 = showInputDialog("Enter the name of the second city interested in:");
+        Set<String> availableCities = graph.getVertexNames();
+        String city1 = showInputDialog("Enter the name of the first city interested in:",availableCities);
+        String city2 = showInputDialog("Enter the name of the second city interested in:",availableCities);
     }//GEN-LAST:event_btnArmyCon2CitiesActionPerformed
 
     private void btnDisposeSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisposeSimulationActionPerformed
+        int dialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to dispose the simulation?", "Dispose Simulation", JOptionPane.YES_NO_OPTION);
+        if (dialogResult == JOptionPane.YES_OPTION) {
+        // User clicked Yes, dispose the simulation
         enableAllButtons();
+        }
     }//GEN-LAST:event_btnDisposeSimulationActionPerformed
 
     private void btnChooseCityWipeOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseCityWipeOutActionPerformed
@@ -274,7 +281,11 @@ public class SkyNetUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnChooseCityWipeOutActionPerformed
 
     private void btnSaveSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveSimulationActionPerformed
+        int dialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to save the simulation?", "Save Simulation", JOptionPane.YES_NO_OPTION);
+        if (dialogResult == JOptionPane.YES_OPTION) {
+        // User clicked Yes, save the simulation
         enableAllButtons();
+        }
     }//GEN-LAST:event_btnSaveSimulationActionPerformed
 
     private void BtnDivideWrldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDivideWrldActionPerformed
@@ -299,13 +310,23 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void btnClosestCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClosestCon2CitiesActionPerformed
         setupButtonState();
-        
-        String city1 = showInputDialog("Enter the name of the first city interested in:");
-        String city2 = showInputDialog("Enter the name of the second city interested in:");
+        Set<String> availableCities = graph.getVertexNames();
+        String city1 = showInputDialog("Enter the name of the first city interested in:",availableCities);
+        String city2 = showInputDialog("Enter the name of the second city interested in:",availableCities);
     }//GEN-LAST:event_btnClosestCon2CitiesActionPerformed
     
-    private String showInputDialog(String message) {
-        return JOptionPane.showInputDialog(this, message);
+    private String showInputDialog(String message,Set<String> availableCities) {
+        String userInput = null;
+        while (userInput == null || !availableCities.contains(userInput)) {
+        userInput = JOptionPane.showInputDialog(this, message);
+        if (userInput == null) {
+            // The user clicked cancel, handle it as needed
+            break;
+        } else if (!availableCities.contains(userInput)) {
+            JOptionPane.showMessageDialog(this, "Invalid city name. Please select a valid city.", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    return userInput;
     }
     public void AnnihilationPosible(){
         JOptionPane.showMessageDialog(null, "Annihilation is possible!", "Annihilation Status", JOptionPane.INFORMATION_MESSAGE);
@@ -396,6 +417,8 @@ public class SkyNetUI extends javax.swing.JFrame {
     private javax.swing.JButton BtnRestrictGoods;
     private javax.swing.JLabel JlActualMap;
     private javax.swing.JLabel JlSimulatedDestruction;
+    private javax.swing.JList<String> PathLIst;
+    private javax.swing.JScrollPane ScrollPathList;
     private javax.swing.JButton btnAnnihilateWrld;
     private javax.swing.JButton btnArmyCon2Cities;
     private javax.swing.JButton btnChooseCityWipeOut;
@@ -405,10 +428,8 @@ public class SkyNetUI extends javax.swing.JFrame {
     private javax.swing.JButton btnMostEfficientWipeOut;
     private javax.swing.JButton btnSaveSimulation;
     private javax.swing.JButton jButton1;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelActualMap;
     private javax.swing.JScrollPane scrollPanelActualMap;
     // End of variables declaration//GEN-END:variables

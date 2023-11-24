@@ -36,6 +36,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.GraphWalk;
 import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.traverse.BreadthFirstIterator;
 import skynet.skynet.SkyNetUI;
 /**
  *
@@ -136,6 +137,14 @@ public class CustomGraph {
 
     public Graph<Vertex, DefaultEdge> getGraph() {
         return graph;
+    }
+    
+    public Set<String> getVertexNames() {
+        Set<String> vertexNames = new HashSet<>();
+        for (Vertex vertex : graph.vertexSet()) {
+            vertexNames.add(vertex.getVertex()); 
+        }
+        return vertexNames;
     }
     
     public void disconnectGraph() {
@@ -251,8 +260,70 @@ public class CustomGraph {
     
     //Algoritmo para el cuarto caso
     //Djistra https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/?ref=lbp
-    
-    
+    /*public void findAndRemoveMostPotentMilitaryNode() {
+        // Find the node with the highest military potential
+        Vertex mostPotentMilitaryNode = findMostPotentMilitaryNode();
+        
+        if (mostPotentMilitaryNode != null) {
+            // Determine all paths from any node to the most potent military node
+            List<GraphPath<Vertex, DefaultEdge>> efficientPaths = determineEfficientPathsToNode(mostPotentMilitaryNode);
+
+            // List and remove the efficient paths
+            listAndRemovePaths(efficientPaths);
+
+            // Visualize the updated graph
+            visualizeGraph(graph);
+        } else {
+            System.out.println("No nodes found in the graph.");
+        }
+    }
+
+    private Vertex findMostPotentMilitaryNode() {
+        return graph.vertexSet().stream()
+                .max(Comparator.comparingDouble(vertex -> ((Vertex) vertex).getMilitaryPotential()))
+                .orElse(null);
+    }
+ 
+    private List<GraphPath<Vertex, DefaultEdge>> determineEfficientPathsToNode(Vertex targetNode) {
+        List<GraphPath<Vertex, DefaultEdge>> efficientPaths = new ArrayList<>();
+        
+        BreadthFirstIterator<Vertex, DefaultEdge> iterator = new BreadthFirstIterator<>(graph, targetNode);
+        while (iterator.hasNext()) {
+            Vertex sourceNode = iterator.next();
+            if (!sourceNode.equals(targetNode)) {
+                DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
+                        new DijkstraShortestPath<>(graph, sourceNode, v -> graph.getEdgeWeight(v));
+
+                GraphPath<Vertex, DefaultEdge> shortestPath = dijkstra.getPath(targetNode);
+                if (shortestPath != null) {
+                    efficientPaths.add(shortestPath);
+                }
+            }
+        }
+
+        return efficientPaths;
+    }
+
+    private void listAndRemovePaths(List<GraphPath<Vertex, DefaultEdge>> pathsToRemove) {
+        System.out.println("Efficient Paths to Most Potent Military Node:");
+        for (GraphPath<Vertex, DefaultEdge> path : pathsToRemove) {
+            System.out.println("Path: " + path.getVertexList() +
+                    " Distance: " + path.getWeight() +
+                    " Military Power: " + calculateTotalMilitaryPower(path));
+
+            // Remove the path from the graph
+            for (DefaultEdge edge : path.getEdgeList()) {
+                graph.removeEdge(edge);
+            }
+        }
+    }
+
+    private double calculateTotalMilitaryPower(GraphPath<Vertex, DefaultEdge> path) {
+        return path.getEdgeList().stream()
+                .mapToDouble(edge -> ((Edge) edge).getMilitary())
+                .sum();
+    }
+    */
     //Algoritmo para aniquilacion total quinto caso 
     //https://www.geeksforgeeks.org/euler-circuit-directed-graph/?ref=lbp
     public void totalAnnihilation() {
@@ -556,8 +627,75 @@ public class CustomGraph {
         currentPath.remove(currentPath.size() - 1);
     }*/
 
-
-
     
     //https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/?ref=lbp
+    /*    public void determineTraversalOrderAndEliminateMostExpensivePath() {
+        // Determine the order of traversal based on technological level
+        List<Vertex> traversalOrder = determineTraversalOrder();
+
+        // Find the most expensive or militarily powerful path
+        DefaultWeightedEdge mostExpensiveEdge = findMostExpensivePath(traversalOrder);
+
+        if (mostExpensiveEdge != null) {
+            // Remove the most expensive path from the graph
+            graph.removeEdge(mostExpensiveEdge);
+
+            // Visualize the updated graph (You can replace this with your own visualization logic)
+            visualizeGraph(graph);
+
+            System.out.println("Most expensive path eliminated.");
+        } else {
+            System.out.println("No path found or the graph is empty.");
+        }
+    }
+
+    private List<Vertex> determineTraversalOrder() {
+        // Implement your logic to determine the order of traversal based on technological level
+        // You may need to use a sorting algorithm based on the technological level attribute
+        // Return the list of vertices in the desired order
+        // For example, you can use Collections.sort() with a custom comparator
+
+        List<Vertex> traversalOrder = new ArrayList<>(graph.vertexSet());
+        // Sorting vertices based on technological level (Assuming you have a method getTechnologicalLevel())
+        traversalOrder.sort(Comparator.comparingInt(v -> v.getTechLevel()));
+        return traversalOrder;
+    }
+
+    private DefaultWeightedEdge findMostExpensivePath(List<Vertex> traversalOrder) {
+        // Implement your logic to find the most expensive or militarily powerful path
+        // You may use Dijkstra's algorithm or other graph traversal algorithms
+        // Return the most expensive edge (path) in the graph
+
+        DefaultWeightedEdge mostExpensiveEdge = null;
+        double maxMilitaryPower = Double.MIN_VALUE;
+
+        for (Vertex source : traversalOrder) {
+            DijkstraShortestPath<Vertex, DefaultWeightedEdge> dijkstra =
+                    new DijkstraShortestPath<>(graph, source, v -> graph.getEdgeWeight(v));
+            
+            for (Vertex target : traversalOrder) {
+                if (!source.equals(target)) {
+                    GraphPath<Vertex, DefaultWeightedEdge> path = dijkstra.getPath(target);
+                    if (path != null) {
+                        double militaryPower = calculateTotalMilitaryPower(path);
+                        if (militaryPower > maxMilitaryPower) {
+                            maxMilitaryPower = militaryPower;
+                            mostExpensiveEdge = path.getEdgeList().get(0);
+                        }
+                    }
+                }
+            }
+        }
+
+        return mostExpensiveEdge;
+    }
+
+    private double calculateTotalMilitaryPower(GraphPath<Vertex, DefaultWeightedEdge> path) {
+        // Implement your logic to calculate the total military power of a given path
+        // Sum the military power of all edges in the path
+        return path.getEdgeList().stream()
+                .mapToDouble(edge -> ((Edge) edge).getMilitary())
+                .sum();
+    }
+*/
 }

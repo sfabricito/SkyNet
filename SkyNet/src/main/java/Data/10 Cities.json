@@ -1,0 +1,202 @@
+[
+  {
+    "vertex": "New York",
+    "soldiers": 4000,
+    "missiles": 3500,
+    "techLevel": 8,
+    "edges": [
+      {
+        "toVertex": "Atlanta",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      },
+      {
+        "toVertex": "Boston",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      }
+    ]
+  },
+  {
+    "vertex": "Boston",
+    "soldiers": 2300,
+    "missiles": 1800,
+    "techLevel": 5,
+    "edges": [
+      {
+        "toVertex": "Atlanta",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      },
+      {
+        "toVertex": "Washington DC",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      }
+    ]
+  },
+  {
+    "vertex": "Washington DC",
+    "soldiers": 4000,
+    "missiles": 3500,
+    "techLevel": 8,
+    "edges": [
+      {
+        "toVertex": "Atlanta",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      },
+      {
+        "toVertex": "Boston",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      }
+    ]
+  },
+  {
+    "vertex": "Atlanta",
+    "soldiers": 2300,
+    "missiles": 1800,
+    "techLevel": 5,
+    "edges": [
+      {
+        "toVertex": "Miami",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      },
+      {
+        "toVertex": "Boston",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      }
+    ]
+  },
+  {
+    "vertex": "New Jersey",
+    "soldiers": 2300,
+    "missiles": 1800,
+    "techLevel": 5,
+    "edges": [
+      {
+        "toVertex": "Atlanta",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      },
+      {
+        "toVertex": "Boston",
+        "military": 10,
+        "goods": 50,
+        "distance": 900
+      }
+    ]
+  },
+  {
+    "vertex": "Chicago",
+    "soldiers": 3000,
+    "missiles": 2500,
+    "techLevel": 7,
+    "edges": [
+      {
+        "toVertex": "New York",
+        "military": 8,
+        "goods": 40,
+        "distance": 800
+      },
+      {
+        "toVertex": "Washington DC",
+        "military": 8,
+        "goods": 40,
+        "distance": 700
+      }
+    ]
+  },
+  {
+    "vertex": "Los Angeles",
+    "soldiers": 3500,
+    "missiles": 3000,
+    "techLevel": 9,
+    "edges": [
+      {
+        "toVertex": "Chicago",
+        "military": 12,
+        "goods": 60,
+        "distance": 1200
+      },
+      {
+        "toVertex": "Washington DC",
+        "military": 10,
+        "goods": 55,
+        "distance": 1500
+      }
+    ]
+  },
+  {
+    "vertex": "San Francisco",
+    "soldiers": 3200,
+    "missiles": 2800,
+    "techLevel": 8,
+    "edges": [
+      {
+        "toVertex": "Los Angeles",
+        "military": 10,
+        "goods": 50,
+        "distance": 600
+      },
+      {
+        "toVertex": "Chicago",
+        "military": 8,
+        "goods": 45,
+        "distance": 1000
+      }
+    ]
+  },
+  {
+    "vertex": "Houston",
+    "soldiers": 2800,
+    "missiles": 2300,
+    "techLevel": 6,
+    "edges": [
+      {
+        "toVertex": "Atlanta",
+        "military": 10,
+        "goods": 55,
+        "distance": 800
+      },
+      {
+        "toVertex": "New York",
+        "military": 8,
+        "goods": 40,
+        "distance": 1200
+      }
+    ]
+  },
+  {
+    "vertex": "Miami",
+    "soldiers": 2600,
+    "missiles": 2100,
+    "techLevel": 5,
+    "edges": [
+      {
+        "toVertex": "Houston",
+        "military": 8,
+        "goods": 35,
+        "distance": 900
+      },
+      {
+        "toVertex": "Atlanta",
+        "military": 8,
+        "goods": 40,
+        "distance": 700
+      }
+    ]
+  }
+]

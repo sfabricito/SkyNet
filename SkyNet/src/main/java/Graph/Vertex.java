@@ -49,6 +49,9 @@ public class Vertex {
     public int getTechLevel() {
         return techLevel;
     }
+    public double getMilitaryPotential(){
+        return soldiers + missiles;
+    }
 
     public ArrayList<Edge> getEdges() {
         return edges;
