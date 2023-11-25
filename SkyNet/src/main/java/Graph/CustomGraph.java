@@ -606,7 +606,7 @@ public class CustomGraph {
         }
         */
         
-        simulatedGraph = cloneSimpleGraph(this.graph);
+        simulatedGraph = cloneSimpleGraph(graph);
         
         JPanel panel = new JPanel();        
         paintEulerCircuitGraph(panel, simulatedGraph, edgeList);
@@ -668,11 +668,20 @@ public class CustomGraph {
 
     // -------------------------------------------- Eulerian Most Visited Vertex (Case 6) ----------------------------------------
     //https://www.geeksforgeeks.org/eulerian-path-and-circuit/
-        public void findAndRemoveMostVisitedVertices() {
+    public void findAndRemoveMostVisitedVertices() {
         // Check if the graph is connected
         ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
+        // Check if the graph is connected
         if (!connectivityInspector.isConnected()) {
-            window.NotConnected();
+            System.out.println("The graph is not connected. Total annihilation not possible.");
+            //window.AnnihilationNotPosibleNotConnected();
+            return;
+        }
+
+        // Check if the degrees are suitable for Eulerian circuit
+        if (!checkDegreesForEulerianCircuit(graph)) {
+            System.out.println("In-degree and out-degree are not equal for each vertex. Total annihilation not possible.");
+            //window.AnnihilationNotPosibleNotEven();
             return;
         }
 
@@ -686,21 +695,16 @@ public class CustomGraph {
         }
 
         // Find the vertices with the maximum visit count
-        int maxVisitCount = 0;
-        for (int count : vertexVisitCount.values()) {
-            maxVisitCount = Math.max(maxVisitCount, count);
-        }
-        
-        final int finalMaxVisitCount = maxVisitCount;
-        
-        // Remove vertices with the maximum visit count
-        Set<Vertex> verticesToRemove = vertexVisitCount.entrySet().stream()
-                .filter(entry -> entry.getValue() == finalMaxVisitCount)
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toSet());
+        int maxVisitCount = Collections.max(vertexVisitCount.values());
 
-        for (Vertex vertex : verticesToRemove) {
-            graph.removeVertex(vertex);
+        // Clone the graph
+        simulatedGraph = cloneSimpleGraph(graph);
+
+        // Remove vertices with the maximum visit count
+        for (Vertex vertex : vertexVisitCount.keySet()) {
+            if (vertexVisitCount.get(vertex) == maxVisitCount) {
+                simulatedGraph.removeVertex(vertex);
+            }
         }
 
         // Print the Eulerian circuit and removed vertices
@@ -708,16 +712,23 @@ public class CustomGraph {
         for (int i = 0; i < eulerianCircuit.size() - 1; i++) {
             Vertex source = eulerianCircuit.get(i);
             Vertex target = eulerianCircuit.get(i + 1);
-            DefaultEdge edge = graph.getEdge(source, target);
+            DefaultEdge edge = simulatedGraph.getEdge(source, target);
             System.out.println(source + " -- " + target);
         }
 
         System.out.println("Vertices Removed:");
-        verticesToRemove.forEach(System.out::println);
+        vertexVisitCount.entrySet().stream()
+                .filter(entry -> entry.getValue() == maxVisitCount)
+                .map(Map.Entry::getKey)
+                .forEach(System.out::println);
 
         // Visualize the updated graph (You can replace this with your own visualization logic)
-        
     }
+
+
+
+
+
     
     // -------------------------------------------- Dijkstra Less Distance (Case 7) ----------------------------------------
     /*

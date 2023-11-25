@@ -6,7 +6,9 @@ import org.jgrapht.alg.cycle.HierholzerEulerianCycle;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.jgrapht.graph.DefaultDirectedGraph;
 
 public class SkyNet {
@@ -18,7 +20,7 @@ public class SkyNet {
         Vertex vertex1 = new Vertex("1", 3, 2, 4);
         Vertex vertex2 = new Vertex("2", 3, 2, 4);
         Vertex vertex3 = new Vertex("3", 3, 2, 4);
-        
+
         graph.addVertex(vertex1);
         graph.addVertex(vertex2);
         graph.addVertex(vertex3);
@@ -29,7 +31,7 @@ public class SkyNet {
         Edge edge3 = new Edge("1", 3, 3, 3);
         graph.addEdge(vertex1, vertex2, edge1);
         graph.addEdge(vertex2, vertex3, edge2);
-        //graph.addEdge(vertex3, vertex1, edge3);
+        graph.addEdge(vertex3, vertex1, edge3);
 
         // Print the graph
         System.out.println("Graph: " + graph);
@@ -54,16 +56,29 @@ public class SkyNet {
                 new HierholzerEulerianCycle<>(); // Explicitly specify types here
         List<DefaultEdge> edgeList = eulerianCycle.getEulerianCycle(graph).getEdgeList();
 
-        // Print edges in the process
-        System.out.println("Eulerian Circuit:");
+        // Count visits for each vertex
+        // Count visits for each vertex
+        Map<Vertex, Integer> visitCount = new HashMap<>();
         for (DefaultEdge edge : edgeList) {
-            System.out.println(graph.getEdgeSource(edge).getVertex() + " -> " + graph.getEdgeTarget(edge).getVertex());
+            Vertex source = graph.getEdgeSource(edge);
+            Vertex target = graph.getEdgeTarget(edge);
+
+            // Increment visit count for the source and target vertices
+            visitCount.put(source, visitCount.getOrDefault(source, 0) + 1);
+            visitCount.put(target, visitCount.getOrDefault(target, 0) + 1);
+        }
+
+
+        // Print visit counts for each vertex
+        System.out.println("Visit Counts:");
+        for (Map.Entry<Vertex, Integer> entry : visitCount.entrySet()) {
+            System.out.println(entry.getKey().getVertex() + ": " + entry.getValue());
         }
     }
-    
+
     private static boolean checkDegreesForEulerianCircuit(Graph<Vertex, DefaultEdge> graph) {
         for (Vertex vertex : graph.vertexSet()) {
-            int degree = graph.degreeOf(vertex);
+            int degree = graph.inDegreeOf(vertex) + graph.outDegreeOf(vertex);
             if (degree % 2 != 0) {
                 return false;
             }

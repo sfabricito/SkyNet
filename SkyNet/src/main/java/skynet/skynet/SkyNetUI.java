@@ -317,6 +317,9 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void btnMostConnectedCityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostConnectedCityActionPerformed
         setupButtonState();
+        graph.totalAnnihilation();
+        graph.findAndRemoveMostVisitedVertices();
+        graph.paintGraph("simulated", pnlSimulatedMap);
     }//GEN-LAST:event_btnMostConnectedCityActionPerformed
 
     private void btnMostEfficientWipeOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostEfficientWipeOutActionPerformed
