@@ -3,7 +3,7 @@
     "vertex": "New York",
     "soldiers": 4000,
     "missiles": 3500,
-    "techLevel": 8,
+    "techLevel": 20,
     "edges": [
       {
         "toVertex": "Atlanta",
@@ -23,7 +23,7 @@
     "vertex": "Boston",
     "soldiers": 2300,
     "missiles": 1800,
-    "techLevel": 5,
+    "techLevel": 35,
     "edges": [
       {
         "toVertex": "Atlanta",
@@ -43,7 +43,7 @@
     "vertex": "Washington DC",
     "soldiers": 4000,
     "missiles": 3500,
-    "techLevel": 8,
+    "techLevel": 15,
     "edges": [
       {
         "toVertex": "Atlanta",
@@ -63,7 +63,7 @@
     "vertex": "Atlanta",
     "soldiers": 2300,
     "missiles": 1800,
-    "techLevel": 5,
+    "techLevel": 39,
     "edges": [
       {
         "toVertex": "Miami",
@@ -83,7 +83,7 @@
     "vertex": "New Jersey",
     "soldiers": 2300,
     "missiles": 1800,
-    "techLevel": 5,
+    "techLevel": 33,
     "edges": [
       {
         "toVertex": "Atlanta",
@@ -103,7 +103,7 @@
     "vertex": "Chicago",
     "soldiers": 3000,
     "missiles": 2500,
-    "techLevel": 7,
+    "techLevel": 37,
     "edges": [
       {
         "toVertex": "New York",
@@ -123,7 +123,7 @@
     "vertex": "Los Angeles",
     "soldiers": 3500,
     "missiles": 3000,
-    "techLevel": 9,
+    "techLevel": 16,
     "edges": [
       {
         "toVertex": "Chicago",
@@ -143,7 +143,7 @@
     "vertex": "San Francisco",
     "soldiers": 3200,
     "missiles": 2800,
-    "techLevel": 8,
+    "techLevel": 12,
     "edges": [
       {
         "toVertex": "Los Angeles",
@@ -163,7 +163,7 @@
     "vertex": "Houston",
     "soldiers": 2800,
     "missiles": 2300,
-    "techLevel": 6,
+    "techLevel": 17,
     "edges": [
       {
         "toVertex": "Atlanta",
@@ -183,7 +183,7 @@
     "vertex": "Miami",
     "soldiers": 2600,
     "missiles": 2100,
-    "techLevel": 5,
+    "techLevel": 13,
     "edges": [
       {
         "toVertex": "Houston",
@@ -203,7 +203,7 @@
     "vertex": "Seattle",
     "soldiers": 2800,
     "missiles": 2300,
-    "techLevel": 6,
+    "techLevel": 46,
     "edges": [
       {
         "toVertex": "San Francisco",
@@ -223,7 +223,7 @@
     "vertex": "Dallas",
     "soldiers": 3200,
     "missiles": 2800,
-    "techLevel": 7,
+    "techLevel": 44,
     "edges": [
       {
         "toVertex": "Houston",
@@ -243,7 +243,7 @@
     "vertex": "Denver",
     "soldiers": 3000,
     "missiles": 2500,
-    "techLevel": 6,
+    "techLevel": 42,
     "edges": [
       {
         "toVertex": "Chicago",
@@ -263,7 +263,7 @@
     "vertex": "Phoenix",
     "soldiers": 2500,
     "missiles": 2000,
-    "techLevel": 5,
+    "techLevel": 14,
     "edges": [
       {
         "toVertex": "Los Angeles",
@@ -283,7 +283,7 @@
     "vertex": "Las Vegas",
     "soldiers": 2600,
     "missiles": 2100,
-    "techLevel": 5,
+    "techLevel": 19,
     "edges": [
       {
         "toVertex": "Los Angeles",
@@ -303,7 +303,7 @@
     "vertex": "Detroit",
     "soldiers": 2800,
     "missiles": 2300,
-    "techLevel": 6,
+    "techLevel": 11,
     "edges": [
       {
         "toVertex": "Chicago",
@@ -323,7 +323,7 @@
     "vertex": "St. Louis",
     "soldiers": 3200,
     "missiles": 2800,
-    "techLevel": 7,
+    "techLevel": 41,
     "edges": [
       {
         "toVertex": "Chicago",
@@ -343,7 +343,7 @@
     "vertex": "New Orleans",
     "soldiers": 2600,
     "missiles": 2100,
-    "techLevel": 5,
+    "techLevel": 38,
     "edges": [
       {
         "toVertex": "Houston",
@@ -363,7 +363,7 @@
     "vertex": "Orlando",
     "soldiers": 3000,
     "missiles": 2500,
-    "techLevel": 6,
+    "techLevel": 18,
     "edges": [
       {
         "toVertex": "Miami",
@@ -383,7 +383,7 @@
     "vertex": "Tampa",
     "soldiers": 2400,
     "missiles": 1900,
-    "techLevel": 5,
+    "techLevel": 21,
     "edges": [
       {
         "toVertex": "Miami",
@@ -403,7 +403,7 @@
     "vertex": "Portland",
     "soldiers": 2600,
     "missiles": 2100,
-    "techLevel": 5,
+    "techLevel": 22,
     "edges": [
       {
         "toVertex": "Seattle",
@@ -423,7 +423,7 @@
     "vertex": "Cleveland",
     "soldiers": 2400,
     "missiles": 1900,
-    "techLevel": 4,
+    "techLevel": 10,
     "edges": [
       {
         "toVertex": "Detroit",
@@ -443,7 +443,7 @@
     "vertex": "Nashville",
     "soldiers": 3000,
     "missiles": 2500,
-    "techLevel": 6,
+    "techLevel": 23,
     "edges": [
       {
         "toVertex": "St. Louis",
@@ -463,7 +463,7 @@
     "vertex": "Pittsburgh",
     "soldiers": 2200,
     "missiles": 1700,
-    "techLevel": 4,
+    "techLevel": 24,
     "edges": [
       {
         "toVertex": "Cleveland",
@@ -483,7 +483,7 @@
     "vertex": "San Diego",
     "soldiers": 2800,
     "missiles": 2300,
-    "techLevel": 6,
+    "techLevel": 25,
     "edges": [
       {
         "toVertex": "Los Angeles",
@@ -503,7 +503,7 @@
     "vertex": "Minneapolis",
     "soldiers": 2600,
     "missiles": 2100,
-    "techLevel": 5,
+    "techLevel": 26,
     "edges": [
       {
         "toVertex": "Chicago",
@@ -523,7 +523,7 @@
     "vertex": "Philadelphia",
     "soldiers": 3000,
     "missiles": 2500,
-    "techLevel": 6,
+    "techLevel": 27,
     "edges": [
       {
         "toVertex": "New York",
@@ -543,7 +543,7 @@
     "vertex": "Austin",
     "soldiers": 2400,
     "missiles": 1900,
-    "techLevel": 4,
+    "techLevel": 28,
     "edges": [
       {
         "toVertex": "Houston",
@@ -563,7 +563,7 @@
     "vertex": "Raleigh",
     "soldiers": 2800,
     "missiles": 2300,
-    "techLevel": 5,
+    "techLevel": 29,
     "edges": [
       {
         "toVertex": "Washington DC",
@@ -583,7 +583,7 @@
     "vertex": "Charlotte",
     "soldiers": 2200,
     "missiles": 1700,
-    "techLevel": 4,
+    "techLevel": 30,
     "edges": [
       {
         "toVertex": "Raleigh",

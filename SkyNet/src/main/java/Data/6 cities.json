@@ -3,7 +3,7 @@
     "vertex": "New York",
     "soldiers": 4000,
     "missiles": 3500,
-    "techLevel": 8,
+    "techLevel": 4,
     "edges": [
       {
         "toVertex": "Atlanta",
@@ -23,7 +23,7 @@
     "vertex": "Boston",
     "soldiers": 2300,
     "missiles": 1800,
-    "techLevel": 5,
+    "techLevel": 1,
     "edges": [
       {
         "toVertex": "Atlanta",
@@ -43,7 +43,7 @@
     "vertex": "Washington DC",
     "soldiers": 4000,
     "missiles": 3500,
-    "techLevel": 8,
+    "techLevel": 9,
     "edges": [
       {
         "toVertex": "Atlanta",
@@ -63,7 +63,7 @@
     "vertex": "Atlanta",
     "soldiers": 2300,
     "missiles": 1800,
-    "techLevel": 5,
+    "techLevel": 8,
     "edges": [
       {
         "toVertex": "Atlanta",
@@ -83,7 +83,7 @@
     "vertex": "New Jersey",
     "soldiers": 2300,
     "missiles": 1800,
-    "techLevel": 5,
+    "techLevel": 3,
     "edges": [
       {
         "toVertex": "Atlanta",

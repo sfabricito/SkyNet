@@ -58,7 +58,7 @@ import skynet.skynet.SkyNetUI;
 public class CustomGraph {
     private org.jgrapht.Graph<Vertex, DefaultEdge> graph = new SimpleWeightedGraph<>(DefaultEdge.class);
     private org.jgrapht.Graph<Vertex, DefaultEdge> directedGraph = new DefaultDirectedWeightedGraph<>(DefaultEdge.class);
-    
+    private org.jgrapht.Graph<Vertex, DefaultEdge> removedPathGraph = new SimpleGraph<>(DefaultEdge.class);
     private org.jgrapht.Graph<Vertex, DefaultEdge> simulatedGraph = new SimpleWeightedGraph<>(DefaultEdge.class);
     private org.jgrapht.Graph<Vertex, DefaultEdge> simulatedDirectedGraph = new DefaultDirectedWeightedGraph<>(DefaultEdge.class);
     
@@ -560,7 +560,7 @@ public class CustomGraph {
         for (GraphPath<Vertex, DefaultEdge> path : pathsToRemove) {
             System.out.println("Path: " + path.getVertexList() +
                     " Distance: " + path.getWeight() +
-                    " Military Power: " + calculateTotalMilitaryPower(path));
+                    " Military Power: " + calculateMilitaryPower(path));
 
             // Remove the path from the graph
             for (DefaultEdge edge : path.getEdgeList()) {
@@ -569,7 +569,7 @@ public class CustomGraph {
         }
     }
 
-    private double calculateTotalMilitaryPower(GraphPath<Vertex, DefaultEdge> path) {
+    private double calculateMilitaryPower(GraphPath<Vertex, DefaultEdge> path) {
         return path.getEdgeList().stream()
                 .mapToDouble(edge -> ((Edge) edge).getMilitary())
                 .sum();
@@ -827,7 +827,6 @@ public class CustomGraph {
         }
 
         // Visualize the updated graph (You can replace this with your own visualization logic)
-        
     }
 
     
@@ -879,21 +878,22 @@ private void findAllPathsDFS(
 }
 
     // -------------------------------------------- Tech Level-Best Annihilation (Case 10) ----------------------------------------
-    //https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/?ref=lbp
-    /*    public void determineTraversalOrderAndEliminateMostExpensivePath() {
+
+
+    public void determineTraversalOrderAndEliminateMostExpensivePath() {
         // Determine the order of traversal based on technological level
         List<Vertex> traversalOrder = determineTraversalOrder();
 
         // Find the most expensive or militarily powerful path
-        DefaultWeightedEdge mostExpensiveEdge = findMostExpensivePath(traversalOrder);
+        List<Vertex> mostExpensivePath = findMostExpensivePath(traversalOrder);
 
-        if (mostExpensiveEdge != null) {
+        if (!mostExpensivePath.isEmpty()) {
             // Remove the most expensive path from the graph
-            graph.removeEdge(mostExpensiveEdge);
+            removePathFromGraph(mostExpensivePath);
 
             // Visualize the updated graph (You can replace this with your own visualization logic)
+            //visualizeRemovedPath();
             
-
             System.out.println("Most expensive path eliminated.");
         } else {
             System.out.println("No path found or the graph is empty.");
@@ -902,52 +902,108 @@ private void findAllPathsDFS(
     }
 
     private List<Vertex> determineTraversalOrder() {
-        // Implement your logic to determine the order of traversal based on technological level
-        // You may need to use a sorting algorithm based on the technological level attribute
-        // Return the list of vertices in the desired order
-        // For example, you can use Collections.sort() with a custom comparator
-
         List<Vertex> traversalOrder = new ArrayList<>(graph.vertexSet());
-        // Sorting vertices based on technological level (Assuming you have a method getTechnologicalLevel())
-        traversalOrder.sort(Comparator.comparingInt(v -> v.getTechLevel()));
+        traversalOrder.sort(Comparator.comparingInt(Vertex::getTechLevel).reversed());
         return traversalOrder;
     }
 
-    private DefaultWeightedEdge findMostExpensivePath(List<Vertex> traversalOrder) {
-        // Implement your logic to find the most expensive or militarily powerful path
-        // You may use Dijkstra's algorithm or other graph traversal algorithms
-        // Return the most expensive edge (path) in the graph
+    private List<Vertex> findMostExpensivePath(List<Vertex> traversalOrder) {
+        List<Vertex> mostExpensivePath = new ArrayList<>();
+        double[] maxMilitaryPower = { Double.MIN_VALUE }; // Using an array to store a mutable value
 
-        DefaultWeightedEdge mostExpensiveEdge = null;
-        double maxMilitaryPower = Double.MIN_VALUE;
+        for (Vertex startVertex : traversalOrder) {
+            List<Vertex> currentPath = new ArrayList<>();
+            Set<Vertex> visited = new HashSet<>();
 
-        for (Vertex source : traversalOrder) {
-            DijkstraShortestPath<Vertex, DefaultWeightedEdge> dijkstra =
-                    new DijkstraShortestPath<>(graph, source, v -> graph.getEdgeWeight(v));
-            
-            for (Vertex target : traversalOrder) {
-                if (!source.equals(target)) {
-                    GraphPath<Vertex, DefaultWeightedEdge> path = dijkstra.getPath(target);
-                    if (path != null) {
-                        double militaryPower = calculateTotalMilitaryPower(path);
-                        if (militaryPower > maxMilitaryPower) {
-                            maxMilitaryPower = militaryPower;
-                            mostExpensiveEdge = path.getEdgeList().get(0);
-                        }
+            dfs(startVertex, traversalOrder, currentPath, visited, maxMilitaryPower, mostExpensivePath);
+        }
+
+        return mostExpensivePath;
+    }
+
+    private void dfs(Vertex currentVertex, List<Vertex> traversalOrder, List<Vertex> currentPath,
+                     Set<Vertex> visited, double[] maxMilitaryPower, List<Vertex> mostExpensivePath) {
+        currentPath.add(currentVertex);
+        visited.add(currentVertex);
+
+        if (currentPath.size() == traversalOrder.size()) {
+            // Reached the end of the path, calculate military power
+            double currentMilitaryPower = calculatePathMilitaryPower(currentPath);
+            if (currentMilitaryPower > maxMilitaryPower[0]) {
+                maxMilitaryPower[0] = currentMilitaryPower;
+                mostExpensivePath.clear();
+                mostExpensivePath.addAll(currentPath);
+            }
+        } else {
+            // Explore neighbors
+            for (Vertex neighbor : traversalOrder) {
+                if (!visited.contains(neighbor)) {
+                    DefaultEdge edge = graph.getEdge(currentVertex, neighbor);
+                    if (edge != null) {
+                        dfs(neighbor, traversalOrder, currentPath, visited, maxMilitaryPower, mostExpensivePath);
                     }
                 }
             }
         }
 
-        return mostExpensiveEdge;
+        // Backtrack
+        visited.remove(currentVertex);
+        currentPath.remove(currentPath.size() - 1);
+    }/*
+    private void visualizeRemovedPath() {
+        // You can replace this with your own visualization logic
+        System.out.println("Visualizing removed path:");
+
+        // Iterate through the removed path and add vertices and edges to the removedPathGraph
+        for (int i = 0; i < findMostExpensivePath.size() - 1; i++) {
+            Vertex source = findMostExpensivePath.get(i);
+            Vertex target = findMostmostExpensivePath.get(i + 1);
+
+            // Add vertices to the removedPathGraph if they don't exist
+            if (!removedPathGraph.containsVertex(source)) {
+                removedPathGraph.addVertex(source);
+            }
+            if (!removedPathGraph.containsVertex(target)) {
+                removedPathGraph.addVertex(target);
+            }
+
+            // Add an edge to the removedPathGraph
+            DefaultEdge edge = graph.getEdge(source, target);
+            if (edge != null) {
+                removedPathGraph.addEdge(source, target, edge);
+            }
+        }
+
+        // You can replace this with your own visualization logic
+        System.out.println("Removed Path Graph: " + removedPathGraph);
+    }
+    */
+    private double calculatePathMilitaryPower(List<Vertex> path) {
+        double militaryPower = 0.0;
+        for (int i = 0; i < path.size() - 1; i++) {
+            Vertex source = path.get(i);
+            Vertex target = path.get(i + 1);
+            DefaultEdge edge = graph.getEdge(source, target);
+            militaryPower += calculateEdgeMilitaryPower(edge);
+        }
+        return militaryPower;
     }
 
-    private double calculateTotalMilitaryPower(GraphPath<Vertex, DefaultWeightedEdge> path) {
-        // Implement your logic to calculate the total military power of a given path
-        // Sum the military power of all edges in the path
-        return path.getEdgeList().stream()
-                .mapToDouble(edge -> ((Edge) edge).getMilitary())
-                .sum();
+    private void removePathFromGraph(List<Vertex> path) {
+        simulatedGraph = cloneSimpleGraph(graph);
+        for (int i = 0; i < path.size() - 1; i++) {
+            Vertex source = path.get(i);
+            Vertex target = path.get(i + 1);
+            DefaultEdge edge = simulatedGraph.getEdge(source, target);
+            if (edge != null) {
+                simulatedGraph.removeEdge(edge);
+            }
+        }
     }
-*/
+
+    private double calculateEdgeMilitaryPower(DefaultEdge edge) {
+        return ((Edge) edge).getMilitary();
+    }
 }
+
+    
