@@ -10,6 +10,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.Set;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -29,7 +30,6 @@ public class SkyNetUI extends javax.swing.JFrame {
     CustomGraph graph = new CustomGraph(this);
     public SkyNetUI() {
         initComponents();
-        //setExtendedState(JFrame.MAXIMIZED_BOTH);
         ScrollPathList.setVisible(false);
         
         
@@ -68,6 +68,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         panelActualMap = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         pnlSimulatedMap = new javax.swing.JPanel();
+        Background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1800, 820));
@@ -231,6 +232,10 @@ public class SkyNetUI extends javax.swing.JFrame {
         getContentPane().add(jScrollPane1);
         jScrollPane1.setBounds(940, 390, 860, 480);
 
+        Background.setIcon(new javax.swing.ImageIcon("C:\\Users\\pavel\\OneDrive\\Documents\\NetBeansProjects\\SkyNet\\SkyNet\\src\\main\\java\\Images\\BackGround.jpg")); // NOI18N
+        getContentPane().add(Background);
+        Background.setBounds(0, 0, 1850, 1040);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -354,7 +359,12 @@ public class SkyNetUI extends javax.swing.JFrame {
     return userInput;
     }
     public void AnnihilationPosible(){
-        JOptionPane.showMessageDialog(null, "Annihilation is possible!", "Annihilation Status", JOptionPane.INFORMATION_MESSAGE);
+        int choice = JOptionPane.showConfirmDialog(null, "Do you want to proceed with annihilation? Massive Destruction is possible", "Annihilation Confirmation", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            WorldExterminated destruction = new WorldExterminated();
+            destruction.setVisible(true);
+            this.dispose();
+        }
     }
     public void AnnihilationNotPosibleNotEven(){
         JOptionPane.showMessageDialog(null, "Annihilation is not possible. In-degree and out-degree are not equal for each vertex.", "Annihilation Status", JOptionPane.WARNING_MESSAGE);
@@ -367,7 +377,8 @@ public class SkyNetUI extends javax.swing.JFrame {
     }
     public void AnnihilationNotPosibleNotConnected(){
         JOptionPane.showMessageDialog(null, "Annihilation is not possible. The graph is not connected.", "Annihilation Status", JOptionPane.WARNING_MESSAGE);
-    }    private void setupButtonState() {
+    }
+    private void setupButtonState() {
         // Enable Save and Dispose buttons, and disable others
         btnSaveSimulation.setEnabled(true);
         btnDisposeSimulation.setEnabled(true);
@@ -384,7 +395,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         btnMostEfficientWipeOut.setEnabled(false);
         btnMostConnectedCity.setEnabled(false);
     }
-     private void enableAllButtons() {
+    private void enableAllButtons() {
         btnSaveSimulation.setEnabled(false);
         btnDisposeSimulation.setEnabled(false);
         // Enable all resting buttons
@@ -461,6 +472,7 @@ public class SkyNetUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Background;
     private javax.swing.JButton BtnDirectedWrld;
     private javax.swing.JButton BtnDivideWrld;
     private javax.swing.JButton BtnLoadMap;

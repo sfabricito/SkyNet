@@ -451,19 +451,6 @@ public class CustomGraph {
         return newGraph;
     }
 
-        
-    
-    private void visualizeGraph(Graph<Vertex, DefaultEdge> graphToVisualize) {
-        System.out.println("Visualizing Graph:");
-        for (DefaultEdge edge : graphToVisualize.edgeSet()) {
-            Vertex source = graphToVisualize.getEdgeSource(edge);
-            Vertex target = graphToVisualize.getEdgeTarget(edge);
-            System.out.println(source + " -- " + target + " Goods: " + ((Edge) edge).getGoods());
-        }
-    }
-
-    
-    
     // -------------------------------------------- Convert to directed graph (Case 3) ----------------------------------------
     public static <V, E> boolean isConnected(Graph<V, E> graph) {
         ConnectivityInspector<V, E> inspector = new ConnectivityInspector<>(graph);
@@ -582,14 +569,14 @@ public class CustomGraph {
         // Check if the graph is connected
         if (!connectivityInspector.isConnected()) {
             System.out.println("The graph is not connected. Total annihilation not possible.");
-            //window.AnnihilationNotPosibleNotConnected();
+            window.AnnihilationNotPosibleNotConnected();
             return;
         }
 
         // Check if the degrees are suitable for Eulerian circuit
         if (!checkDegreesForEulerianCircuit(graph)) {
             System.out.println("In-degree and out-degree are not equal for each vertex. Total annihilation not possible.");
-            //window.AnnihilationNotPosibleNotEven();
+            window.AnnihilationNotPosibleNotEven();
             return;
         }
 
@@ -598,19 +585,12 @@ public class CustomGraph {
                 new HierholzerEulerianCycle<>(); // Explicitly specify types here
         List<DefaultEdge> edgeList = eulerianCycle.getEulerianCycle(graph).getEdgeList();
 
-        // Print edges in the process
-        /*
-        System.out.println("Eulerian Circuit: ");
-        for (DefaultEdge edge : edgeList) {
-            System.out.println(this.graph.getEdgeSource(edge).getVertex() + " -> " + this.graph.getEdgeTarget(edge).getVertex());
-        }
-        */
-        
         simulatedGraph = cloneSimpleGraph(graph);
         
         JPanel panel = new JPanel();        
         paintEulerCircuitGraph(panel, simulatedGraph, edgeList);
         window.openPopup(panel, "Euler Circuit");
+        window.AnnihilationPosible();
     }
     
     private boolean checkDegreesForEulerianCircuit(Graph<Vertex, DefaultEdge> graph) {

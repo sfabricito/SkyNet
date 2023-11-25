@@ -7,7 +7,7 @@
     "edges": [
       {
         "toVertex": "Atlanta",
-        "military": 10,
+        "military": 100,
         "goods": 50,
         "distance": 900
       },
@@ -87,13 +87,13 @@
     "edges": [
       {
         "toVertex": "Atlanta",
-        "military": 10,
+        "military": 1500,
         "goods": 50,
         "distance": 900
       },
       {
         "toVertex": "Boston",
-        "military": 10,
+        "military": 1000,
         "goods": 50,
         "distance": 900
       }
