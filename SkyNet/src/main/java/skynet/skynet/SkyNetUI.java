@@ -325,6 +325,7 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void btnAnnihilateWrldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnnihilateWrldActionPerformed
         setupButtonState();
+        graph.totalAnnihilation();
     }//GEN-LAST:event_btnAnnihilateWrldActionPerformed
 
     private void btnClosestCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClosestCon2CitiesActionPerformed
@@ -352,6 +353,12 @@ public class SkyNetUI extends javax.swing.JFrame {
     }
     public void AnnihilationNotPosibleNotEven(){
         JOptionPane.showMessageDialog(null, "Annihilation is not possible. In-degree and out-degree are not equal for each vertex.", "Annihilation Status", JOptionPane.WARNING_MESSAGE);
+    }
+    public void NotConnected(){
+        JOptionPane.showMessageDialog(null, "Graph is not connected, not possible.", "Connected Status", JOptionPane.WARNING_MESSAGE);
+    }
+    public void NoPathFound(){
+        JOptionPane.showMessageDialog(null, "No path found between the specified cities.", "Connected Status", JOptionPane.WARNING_MESSAGE);
     }
     public void AnnihilationNotPosibleNotConnected(){
         JOptionPane.showMessageDialog(null, "Annihilation is not possible. The graph is not connected.", "Annihilation Status", JOptionPane.WARNING_MESSAGE);

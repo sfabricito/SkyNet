@@ -351,7 +351,6 @@ public class CustomGraph {
     }
 
 
-    //Probar con eliminar varios para volver disconexo, se supone que individual funciona bien 
     
 
     // -------------------------------------------- Minimum spanning tree by goods (Case 2) ----------------------------------------
@@ -360,7 +359,7 @@ public class CustomGraph {
         // Check if the graph is connected
         ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
         if (!connectivityInspector.isConnected()) {
-            System.out.println("The graph is not connected. Cannot visualize minimum spanning tree.");
+            window.NotConnected();
             return;
         }
 
@@ -623,15 +622,13 @@ public class CustomGraph {
         return eulerianCircuit;
     }
 
-    
     // -------------------------------------------- Eulerian Most Visited Vertex (Case 6) ----------------------------------------
     //https://www.geeksforgeeks.org/eulerian-path-and-circuit/
-    //Relativo
         public void findAndRemoveMostVisitedVertices() {
         // Check if the graph is connected
         ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
         if (!connectivityInspector.isConnected()) {
-            System.out.println("The graph is not connected. Cannot find and remove most visited vertices.");
+            window.NotConnected();
             return;
         }
 
@@ -689,6 +686,7 @@ public class CustomGraph {
 
         if (shortestPath == null) {
             System.out.println("No path found from " + startCity + " to " + endCity);
+            window.NoPathFound();
             return;
         }
 
@@ -713,43 +711,37 @@ public class CustomGraph {
     }
     */
     
-    // -------------------------------------------- Dijkstra Most Military(Case 8) ----------------------------------------
-    /*
-    public void removeStrongestArmyPath(String startCity, String endCity) {
-        DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
-                new DijkstraShortestPath<>(graph, edge -> (double) ((Edge) edge).getMilitary());
+    // -------------------------------------------- Dijkstra Most Military(Case 8) NOT WORKING----------------------------------------
+    public void findAndRemoveStrongestMilitaryPath(String sourceCity, String targetCity) {
+    // Find the shortest path based on military strength using Dijkstra's algorithm
+    DijkstraShortestPath<Vertex, DefaultEdge> dijkstraAlgorithm = new DijkstraShortestPath<>(graph);
+    GraphPath<Vertex, DefaultEdge> shortestPath = dijkstraAlgorithm.getPath(searchNodeByName(sourceCity), searchNodeByName(targetCity));
 
-        SingleSourcePaths<Vertex, DefaultEdge> paths = dijkstra.getPaths(searchNodeByName(startCity));
-        GraphPath<Vertex, DefaultEdge> StrongestArmyPath = paths.getPath(searchNodeByName(endCity));
 
-        if (StrongestArmyPath == null) {
-            System.out.println("No path found from " + startCity + " to " + endCity);
-            return;
+    // Display the selected path
+    if (shortestPath != null) {
+        System.out.println("Selected Military Path:");
+        for (DefaultEdge defaultEdge : shortestPath.getEdgeList()) {
+            Vertex sourceVertex = graph.getEdgeSource(defaultEdge);
+            Vertex targetVertex = graph.getEdgeTarget(defaultEdge);
+            System.out.println(sourceVertex.getVertex() + " -> " + targetVertex.getVertex());
+
+            // Remove the selected path from the graph
+            graph.removeEdge(defaultEdge);
         }
 
-        // Print the shortest path with distances
-        System.out.println("Strongest Path from " + startCity + " to " + endCity + ":");
-        for (DefaultEdge edge : StrongestArmyPath.getEdgeList()) {
-            Vertex source = graph.getEdgeSource(edge);
-            Vertex target = graph.getEdgeTarget(edge);
-            System.out.println(source + " -- " + target + " Military Strenght: " + ((Edge) edge).getMilitary());
-        }
+        // Display the resulting graph
+        System.out.println("Resulting Graph:");
 
-        // Remove the shortest path from the graph
-        for (DefaultEdge edge : StrongestArmyPath.getEdgeList()) {
-            Vertex source = graph.getEdgeSource(edge);
-            Vertex target = graph.getEdgeTarget(edge);
-            graph.removeEdge(graph.getEdge(source, target));
-        }
+    } else {
+        window.NoPathFound();
+        System.out.println("No path found between the specified cities.");
+    }
+}
 
-        // Visualize the updated graph
-        System.out.println("Updated Graph:");
-        
-    }*/
     // -------------------------------------------- Dijkstra with All Paths (Case 9) ----------------------------------------
-    //Algortimo para el noveno caso
     //Djistra pero que retorne todos los caminos y escoger que camino
-    /*
+    
     public void findAndRemovePaths(String startCity, String endCity) {
         // Find all paths using a modified DFS approach
         List<GraphPath<Vertex, DefaultEdge>> allPaths = findAllPaths(graph, searchNodeByName(startCity), searchNodeByName(endCity));
@@ -805,36 +797,42 @@ public class CustomGraph {
     return allPaths;
     }
 
-    private void findAllPathsDFS(
-            Graph<Vertex, DefaultEdge> graph,
-            Vertex currentVertex,
-            Vertex endVertex,
-            Set<Vertex> visited,
-            List<Vertex> currentPath,
-            List<GraphPath<Vertex, DefaultEdge>> allPaths
-    ) {
-        visited.add(currentVertex);
-        currentPath.add(currentVertex);
+private void findAllPathsDFS(
+    Graph<Vertex, DefaultEdge> graph,
+    Vertex currentVertex,
+    Vertex endVertex,
+    Set<Vertex> visited,
+    List<Vertex> currentPath,
+    List<GraphPath<Vertex, DefaultEdge>> allPaths
+) {
+    visited.add(currentVertex);
+    currentPath.add(currentVertex);
 
-        if (currentVertex.equals(endVertex)) {
-            // Found a path, add it to the list
-            List<DefaultEdge> edgeList = new ArrayList<>();
-            for (int i = 0; i < currentPath.size() - 1; i++) {
-                edgeList.add(graph.getEdge(currentPath.get(i), currentPath.get(i + 1)));
-            }
-            GraphPath<Vertex, DefaultEdge> path = new GraphWalk<>(graph, currentPath, edgeList, 0.0);
-            allPaths.add(path);
-        } else {
-            for (Vertex neighbor : Graphs.neighborSetOf(graph, currentVertex)) {
-                if (!visited.contains(neighbor)) {
-                    findAllPathsDFS(graph, neighbor, endVertex, visited, currentPath, allPaths);
-                }
-            }
+    if (currentVertex.equals(endVertex)) {
+        // Found a path, add it to the list
+        List<DefaultEdge> edgeList = new ArrayList<>();
+        for (int i = 0; i < currentPath.size() - 1; i++) {
+            edgeList.add(graph.getEdge(currentPath.get(i), currentPath.get(i + 1)));
         }
 
-        visited.remove(currentVertex);
-        currentPath.remove(currentPath.size() - 1);
-    }*/
+        // Verify types before creating GraphWalk
+        if (graph.getType().isWeighted()) {
+            GraphPath<Vertex, DefaultEdge> path = new GraphWalk<>(graph, currentVertex, endVertex, currentPath, edgeList, 0.0);
+            allPaths.add(path);
+        } else {
+            GraphPath<Vertex, DefaultEdge> path = new GraphWalk<>(graph, currentVertex, endVertex, currentPath, edgeList, 0.0);
+            allPaths.add(path);
+        }
+    } else {
+        for (Vertex neighbor : Graphs.neighborSetOf(graph, currentVertex)) {
+            if (!visited.contains(neighbor)) {
+                findAllPathsDFS(graph, neighbor, endVertex, visited, currentPath, allPaths);
+            }
+        }
+    }
+    visited.remove(currentVertex);
+    currentPath.remove(currentPath.size() - 1);
+}
 
     // -------------------------------------------- Tech Level-Best Annihilation (Case 10) ----------------------------------------
     //https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/?ref=lbp
@@ -855,6 +853,7 @@ public class CustomGraph {
             System.out.println("Most expensive path eliminated.");
         } else {
             System.out.println("No path found or the graph is empty.");
+            window.NoPathFound();
         }
     }
 
