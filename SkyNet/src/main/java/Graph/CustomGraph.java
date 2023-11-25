@@ -7,7 +7,6 @@ import edu.uci.ics.jung.graph.SparseGraph;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
-import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,36 +19,28 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
 
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
 
 
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.GraphWalk;
 import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
-import org.jgrapht.traverse.BreadthFirstIterator;
 import skynet.skynet.SkyNetUI;
 /**
  *
  * @author fabri
  */
 public class CustomGraph {
-    final private String FILEPATH = "src/main/java/Data/graph.json";
     private org.jgrapht.Graph<Vertex, DefaultEdge> graph = new SimpleWeightedGraph<>(DefaultEdge.class);
     private org.jgrapht.Graph<Vertex, DefaultEdge> directedGraph = new DefaultDirectedWeightedGraph<>(DefaultEdge.class);
     
@@ -217,6 +208,27 @@ public class CustomGraph {
         return vertexNames;
     }
     
+    public void saveSimulation(){
+        graph = cloneSimpleGraph(simulatedGraph);
+        directedGraph = cloneDirectedGraph(simulatedDirectedGraph);
+    }
+    public void deleteSimulation(){
+        this.graph = null;
+        this.directedGraph = null;
+    }
+    
+    private Graph<Vertex, DefaultEdge> cloneSimpleGraph(Graph<Vertex, DefaultEdge> originalGraph) {
+        Graph<Vertex, DefaultEdge> clonedGraph = new SimpleWeightedGraph<>(DefaultEdge.class);
+        Graphs.addGraph(clonedGraph, originalGraph);
+        return clonedGraph;
+    }
+    
+    private Graph<Vertex, DefaultEdge> cloneDirectedGraph(Graph<Vertex, DefaultEdge> originalGraph) {
+        Graph<Vertex, DefaultEdge> clonedGraph = new DefaultDirectedWeightedGraph<>(DefaultEdge.class);
+        Graphs.addGraph(clonedGraph, originalGraph);
+        return clonedGraph;
+    }
+    
     // -------------------------------------------- Disconnect graph (Case 1) ----------------------------------------
     public void disconnectGraph() {
         ConnectivityInspector<Vertex, DefaultEdge> initialConnectivityInspector = new ConnectivityInspector<>(graph);
@@ -234,7 +246,7 @@ public class CustomGraph {
             }
         }
 
-        simulatedGraph = graph;
+        simulatedGraph = cloneSimpleGraph(graph);
         // Remove the identified vertices from the original graph
         for (Vertex v : verticesToRemove) {
             simulatedGraph.removeVertex(v);
@@ -399,16 +411,6 @@ public class CustomGraph {
         }
 
         return directedWeightedGraph;
-    }
-
-    
-    public void saveSimulation(){
-        this.graph = this.simulatedGraph;
-        this.directedGraph = this.simulatedDirectedGraph;
-    }
-    public void deleteSimulation(){
-        this.graph = null;
-        this.directedGraph = null;
     }
     
     //-------------------------------------------- Most Potent Military Node (Case 4) ----------------------------------------
