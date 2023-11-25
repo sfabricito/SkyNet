@@ -15,8 +15,12 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import java.util.Set;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 
 
@@ -379,7 +383,21 @@ public class SkyNetUI extends javax.swing.JFrame {
         btnMostEfficientWipeOut.setEnabled(true);
         btnMostConnectedCity.setEnabled(true);
     }
+    private static void openPopup(JFrame parentFrame) {
+        JDialog popupDialog = new JDialog(parentFrame, "Popup Frame", true);
+        popupDialog.setSize(200, 150);
 
+        JLabel popupLabel = new JLabel("This is a popup frame!");
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> popupDialog.dispose());
+
+        JPanel popupPanel = new JPanel();
+        popupPanel.add(popupLabel);
+        popupPanel.add(closeButton);
+
+        popupDialog.add(popupPanel);
+        popupDialog.setVisible(true);
+    }
     /**
      * @param args the command line arguments
      */

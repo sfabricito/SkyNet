@@ -215,7 +215,7 @@ public class CustomGraph {
         }
         return vertexNames;
     }
-    
+    // -------------------------------------------- Disconnect graph (Case 1) ----------------------------------------
     public void disconnectGraph() {
         // Check if the graph is already disconnected
         ConnectivityInspector<Vertex, DefaultEdge> initialConnectivityInspector = new ConnectivityInspector<>(graph);
@@ -259,12 +259,12 @@ public class CustomGraph {
         for (Vertex v : verticesToRemove) {
             graph.removeVertex(v);
         }
+        
     }
     //Probar con eliminar varios para volver disconexo, se supone que individual funciona bien 
     
-       
-    
-    //Algoritmo para el segundo caso 
+
+    // -------------------------------------------- Minimum spanning tree by goods (Case 2) ----------------------------------------
     //https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/?ref=lbp
     public void visualizeMinimumSpanningTreeByGoods() {
         // Check if the graph is connected
@@ -303,7 +303,6 @@ public class CustomGraph {
         }
 
         // Visualize the minimum spanning tree (You can replace this with your own visualization logic)
-        visualizeGraph(minimumSpanningTree);
 
         // Annul the corresponding edges in the original graph
         for (DefaultEdge edge : minimumSpanningTree.edgeSet()) {
@@ -311,7 +310,7 @@ public class CustomGraph {
         }
 
         // Visualize the graph after annulment (You can replace this with your own visualization logic)
-        visualizeGraph(graph);
+        
     }
     
     private void visualizeGraph(Graph<Vertex, DefaultEdge> graphToVisualize) {
@@ -366,57 +365,18 @@ public class CustomGraph {
 
         return directedWeightedGraph;
     }
+
     
     public void saveSimulation(){
         this.graph = this.simulatedGraph;
         this.directedGraph = this.simulatedDirectedGraph;
     }
-    
     public void deleteSimulation(){
         this.graph = null;
         this.directedGraph = null;
     }
     
-    
-    
-    
-    
-    
-    
-    //Algoritmo para el tercer caso
-    //https://www.geeksforgeeks.org/convert-undirected-connected-graph-to-strongly-connected-directed-graph/
-    //Algo similar
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //Algoritmo para el cuarto caso
+    // -------------------------------------------- Most Potent Military Node (Case 4) ----------------------------------------
     //Djistra https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/?ref=lbp
     /*public void findAndRemoveMostPotentMilitaryNode() {
         // Find the node with the highest military potential
@@ -430,7 +390,7 @@ public class CustomGraph {
             listAndRemovePaths(efficientPaths);
 
             // Visualize the updated graph
-            visualizeGraph(graph);
+            
         } else {
             System.out.println("No nodes found in the graph.");
         }
@@ -483,8 +443,7 @@ public class CustomGraph {
     }
     */
     
-    
-    //Algoritmo para aniquilacion total quinto caso 
+    // -------------------------------------------- Euler Circuit (Case 5) ----------------------------------------
     //https://www.geeksforgeeks.org/euler-circuit-directed-graph/?ref=lbp
     public void totalAnnihilation() {
         // Check if the graph is connected
@@ -570,7 +529,7 @@ public class CustomGraph {
     }
 
     
-    //Algoritmo para el sexto caso
+    // -------------------------------------------- Eulerian Most Visited Vertex (Case 6) ----------------------------------------
     //https://www.geeksforgeeks.org/eulerian-path-and-circuit/
     //Relativo
         public void findAndRemoveMostVisitedVertices() {
@@ -621,13 +580,10 @@ public class CustomGraph {
         verticesToRemove.forEach(System.out::println);
 
         // Visualize the updated graph (You can replace this with your own visualization logic)
-        visualizeGraph(graph);
+        
     }
     
-    //Algoritmo para el setimo caso
-    //Djistra pero yo escogiendo las ciudades
-    
-    // Use Dijkstra's algorithm to find the shortest path with only the "distance" attribute
+    // -------------------------------------------- Dijkstra Less Distance (Case 7) ----------------------------------------
     /*
     public void removeShortestPath(String startCity, String endCity) {
         DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
@@ -658,12 +614,11 @@ public class CustomGraph {
 
         // Visualize the updated graph
         System.out.println("Updated Graph:");
-        visualizeGraph(graph);
+        
     }
     */
     
-    //Algoritmo para le octavo caso
-    //Djistra que sume mas por poder militar
+    // -------------------------------------------- Dijkstra Most Military(Case 8) ----------------------------------------
     /*
     public void removeStrongestArmyPath(String startCity, String endCity) {
         DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
@@ -694,10 +649,10 @@ public class CustomGraph {
 
         // Visualize the updated graph
         System.out.println("Updated Graph:");
-        visualizeGraph(graph);
+        
     }
     */
-    
+    // -------------------------------------------- Dijkstra with All Paths (Case 9) ----------------------------------------
     //Algortimo para el noveno caso
     //Djistra pero que retorne todos los caminos y escoger que camino
     /*
@@ -742,7 +697,7 @@ public class CustomGraph {
         }
 
         // Visualize the updated graph (You can replace this with your own visualization logic)
-        visualizeGraph(graph);
+        
     }
 
     
@@ -787,7 +742,7 @@ public class CustomGraph {
         currentPath.remove(currentPath.size() - 1);
     }*/
 
-    
+    // -------------------------------------------- Tech Level-Best Annihilation (Case 10) ----------------------------------------
     //https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/?ref=lbp
     /*    public void determineTraversalOrderAndEliminateMostExpensivePath() {
         // Determine the order of traversal based on technological level
@@ -801,7 +756,7 @@ public class CustomGraph {
             graph.removeEdge(mostExpensiveEdge);
 
             // Visualize the updated graph (You can replace this with your own visualization logic)
-            visualizeGraph(graph);
+            
 
             System.out.println("Most expensive path eliminated.");
         } else {
