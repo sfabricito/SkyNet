@@ -215,9 +215,9 @@ public class CustomGraph {
         }
         return vertexNames;
     }
+    
     // -------------------------------------------- Disconnect graph (Case 1) ----------------------------------------
     public void disconnectGraph() {
-        // Check if the graph is already disconnected
         ConnectivityInspector<Vertex, DefaultEdge> initialConnectivityInspector = new ConnectivityInspector<>(graph);
         if (!initialConnectivityInspector.isConnected()) {
             System.out.println("The graph is already disconnected. No vertices will be removed.");
@@ -226,41 +226,71 @@ public class CustomGraph {
 
         Set<Vertex> verticesToRemove = new HashSet<>();
 
-        // Iterate through each vertex in the graph
-        for (Vertex vertex : graph.vertexSet()) {
-            // Create a temporary graph without the current vertex
-            Graph<Vertex, DefaultEdge> tempGraph = new SimpleGraph<>(DefaultEdge.class);
-            Set<Vertex> remainingVertices = new HashSet<>(graph.vertexSet());
-            remainingVertices.remove(vertex);
-
-            // Add vertices and edges to the temporary graph
-            for (Vertex v : remainingVertices) {
-                tempGraph.addVertex(v);
-                for (DefaultEdge edge : graph.edgesOf(v)) {
-                    Vertex oppositeVertex = Graphs.getOppositeVertex(graph, edge, v);
-                    if (remainingVertices.contains(oppositeVertex)) {
-                        tempGraph.addEdge(v, oppositeVertex);
-                    }
-                }
-            }
-
-            // Check if the temporary graph is connected
-            ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(tempGraph);
-            if (!connectivityInspector.isConnected()) {
-                // If disconnected, add the current vertex to verticesToRemove and stop further attempts
-                if (verticesToRemove.isEmpty()) {
-                    verticesToRemove.add(vertex);
-                }
-                break;
+        // Start with individual vertices and progressively try more vertices
+        for (int subsetSize = 1; subsetSize <= graph.vertexSet().size(); subsetSize++) {
+            if (findDisconnectingVertices(graph.vertexSet(), new HashSet<>(), subsetSize, verticesToRemove)) {
+                break; // Stop if disconnection is achieved
             }
         }
 
+        simulatedGraph = graph;
         // Remove the identified vertices from the original graph
         for (Vertex v : verticesToRemove) {
-            graph.removeVertex(v);
+            simulatedGraph.removeVertex(v);
         }
-        
     }
+
+    private boolean findDisconnectingVertices(Set<Vertex> remainingVertices, Set<Vertex> currentCombination,
+                                              int subsetSize, Set<Vertex> verticesToRemove) {
+        if (currentCombination.size() == subsetSize) {
+            // Check connectivity of the combination
+            Graph<Vertex, DefaultEdge> tempGraph = createTempGraphWithoutVertices(remainingVertices, currentCombination);
+            ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(tempGraph);
+
+            if (!connectivityInspector.isConnected()) {
+                verticesToRemove.addAll(currentCombination);
+                return true; // Disconnection achieved
+            }
+            return false;
+        }
+
+        for (Vertex vertex : remainingVertices) {
+            Set<Vertex> newRemaining = new HashSet<>(remainingVertices);
+            newRemaining.remove(vertex);
+
+            Set<Vertex> newCombination = new HashSet<>(currentCombination);
+            newCombination.add(vertex);
+
+            if (findDisconnectingVertices(newRemaining, newCombination, subsetSize, verticesToRemove)) {
+                return true; // Stop searching if disconnection is achieved
+            }
+        }
+
+        return false;
+    }
+
+    private Graph<Vertex, DefaultEdge> createTempGraphWithoutVertices(Set<Vertex> remainingVertices, Set<Vertex> verticesToRemove) {
+        Graph<Vertex, DefaultEdge> tempGraph = new SimpleGraph<>(DefaultEdge.class);
+
+        // Add vertices to tempGraph
+        for (Vertex v : remainingVertices) {
+            tempGraph.addVertex(v);
+        }
+
+        // Add edges to tempGraph, excluding edges connected to verticesToRemove
+        for (Vertex v : remainingVertices) {
+            for (DefaultEdge edge : graph.edgesOf(v)) {
+                Vertex oppositeVertex = Graphs.getOppositeVertex(graph, edge, v);
+                if (remainingVertices.contains(oppositeVertex) && !verticesToRemove.contains(v) && !verticesToRemove.contains(oppositeVertex)) {
+                    tempGraph.addEdge(v, oppositeVertex);
+                }
+            }
+        }
+
+        return tempGraph;
+    }
+
+
     //Probar con eliminar varios para volver disconexo, se supone que individual funciona bien 
     
 

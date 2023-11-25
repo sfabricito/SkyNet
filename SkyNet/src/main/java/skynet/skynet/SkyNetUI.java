@@ -305,6 +305,8 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void BtnDivideWrldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnDivideWrldActionPerformed
         setupButtonState();
+        graph.disconnectGraph();
+        graph.paintGraph("simulated", pnlSimulatedMap);
     }//GEN-LAST:event_BtnDivideWrldActionPerformed
 
     private void BtnRestrictGoodsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRestrictGoodsActionPerformed
