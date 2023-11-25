@@ -51,6 +51,10 @@ public class CustomGraph {
     final private String FILEPATH = "src/main/java/Data/graph.json";
     private org.jgrapht.Graph<Vertex, DefaultEdge> graph = new SimpleWeightedGraph<>(DefaultEdge.class);
     private org.jgrapht.Graph<Vertex, DefaultEdge> directedGraph = new DefaultDirectedWeightedGraph<>(DefaultEdge.class);
+    
+    private org.jgrapht.Graph<Vertex, DefaultEdge> simulatedGraph = new SimpleWeightedGraph<>(DefaultEdge.class);
+    private org.jgrapht.Graph<Vertex, DefaultEdge> simulatedDirectedGraph = new DefaultDirectedWeightedGraph<>(DefaultEdge.class);
+    
     private boolean isDirected;
     public SkyNetUI window;
 
@@ -59,10 +63,10 @@ public class CustomGraph {
     
     public CustomGraph(SkyNetUI window){
         this.window=window;
-        this.isDirected = false;
     }
     
     public void loadGraph(String route){
+        this.isDirected = false;
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Vertex> nodes = new ArrayList<Vertex>();
         try {
@@ -86,11 +90,16 @@ public class CustomGraph {
         }
     }
     
-    public void paintGraph(JPanel panel){
+    public void paintGraph(String command, JPanel panel){
         
         if (!isDirected) {
-            System.out.println("Repaint: not directed");
-            edu.uci.ics.jung.graph.Graph<String, String> jungGraph = convertJGraphTtoJUNG(graph);
+            edu.uci.ics.jung.graph.Graph<String, String> jungGraph = new SparseGraph<>();
+            if (command.equals("real")) {
+                jungGraph = convertJGraphTtoJUNG(graph);
+            } 
+            if (command.equals("simulated")) {
+                jungGraph = convertJGraphTtoJUNG(simulatedGraph);
+            }
             // Create JUNG visualization
             BasicVisualizationServer<String, String> vv = new BasicVisualizationServer<>(new CircleLayout<>(jungGraph));
             vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
@@ -108,8 +117,13 @@ public class CustomGraph {
             panel.add(vv);
         }
         if (isDirected) {
-            System.out.println("Repaint: directed");
-            edu.uci.ics.jung.graph.Graph<String, String> jungGraph = convertJGraphTDirectedtoJUNG(directedGraph);
+            edu.uci.ics.jung.graph.Graph<String, String> jungGraph =  new DirectedSparseGraph<>();
+            if (command.equals("real")) {
+                jungGraph = convertJGraphTDirectedtoJUNG(directedGraph);
+            } 
+            if (command.equals("simulated")) {
+                jungGraph = convertJGraphTDirectedtoJUNG( simulatedDirectedGraph);
+            }
             // Create JUNG visualization
             // Layout for the graph
             CircleLayout<String, String> layout = new CircleLayout<>(jungGraph);
@@ -134,7 +148,6 @@ public class CustomGraph {
             // Add the graph visualization to the panel
             panel.add(vv);
         }
-
     }
     
     private static edu.uci.ics.jung.graph.Graph<String, String> convertJGraphTtoJUNG(org.jgrapht.Graph<Vertex, DefaultEdge> jGraphTGraph) {
@@ -151,7 +164,7 @@ public class CustomGraph {
             Set<DefaultEdge> outgoingEdges = jGraphTGraph.outgoingEdgesOf(source);
             for (DefaultEdge edge : outgoingEdges) {
                 Vertex target = Graphs.getOppositeVertex(jGraphTGraph, edge, source);
-                String edgeIdentifier =  target.getVertex() + " ➡ " +  source.getVertex();
+                String edgeIdentifier = source.getVertex()  + " - " +   target.getVertex();
                 jungGraph.addEdge(edgeIdentifier, source.getVertex(), target.getVertex());
             }
         }
@@ -173,7 +186,7 @@ public class CustomGraph {
             Set<DefaultEdge> outgoingEdges = jGraphTGraph.outgoingEdgesOf(source);
             for (DefaultEdge edge : outgoingEdges) {
                 Vertex target = Graphs.getOppositeVertex(jGraphTGraph, edge, source);
-                String edgeIdentifier =  target.getVertex() + " ➡ " +  source.getVertex();
+                String edgeIdentifier = source.getVertex()  + " - " + target.getVertex() ;
                 jungGraph.addEdge(edgeIdentifier, source.getVertex(), target.getVertex());
             }
         }
@@ -319,7 +332,7 @@ public class CustomGraph {
     }
     
     public void convertToDirectGraph(){
-        directedGraph = convertToDirectedWeightedGraph(graph);
+        simulatedDirectedGraph = convertToDirectedWeightedGraph(graph);
         this.isDirected = true;
     }
     
@@ -352,6 +365,16 @@ public class CustomGraph {
         }
 
         return directedWeightedGraph;
+    }
+    
+    public void saveSimulation(){
+        this.graph = this.simulatedGraph;
+        this.directedGraph = this.simulatedDirectedGraph;
+    }
+    
+    public void deleteSimulation(){
+        this.graph = null;
+        this.directedGraph = null;
     }
     
     

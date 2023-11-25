@@ -28,6 +28,7 @@ public class SkyNetUI extends javax.swing.JFrame {
     CustomGraph graph = new CustomGraph(this);
     public SkyNetUI() {
         initComponents();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         ScrollPathList.setVisible(false);
     }
 
@@ -42,6 +43,7 @@ public class SkyNetUI extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         BtnLoadMap = new javax.swing.JButton();
         BtnRestrictGoods = new javax.swing.JButton();
         btnDisposeSimulation = new javax.swing.JButton();
@@ -61,7 +63,8 @@ public class SkyNetUI extends javax.swing.JFrame {
         JlSimulatedDestruction = new javax.swing.JLabel();
         scrollPanelActualMap = new javax.swing.JScrollPane();
         panelActualMap = new javax.swing.JPanel();
-        panelSim = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        pnlSimulatedMap = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(1200, 820));
@@ -74,7 +77,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(BtnLoadMap);
-        BtnLoadMap.setBounds(80, 70, 130, 50);
+        BtnLoadMap.setBounds(390, 70, 130, 50);
 
         BtnRestrictGoods.setText("Restrict Goods");
         BtnRestrictGoods.addActionListener(new java.awt.event.ActionListener() {
@@ -83,7 +86,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(BtnRestrictGoods);
-        BtnRestrictGoods.setBounds(210, 240, 130, 50);
+        BtnRestrictGoods.setBounds(520, 180, 130, 50);
 
         btnDisposeSimulation.setBackground(new java.awt.Color(102, 0, 51));
         btnDisposeSimulation.setFont(new java.awt.Font("sansserif", 0, 10)); // NOI18N
@@ -95,7 +98,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnDisposeSimulation);
-        btnDisposeSimulation.setBounds(660, 370, 140, 30);
+        btnDisposeSimulation.setBounds(950, 350, 140, 30);
 
         BtnDirectedWrld.setText("Directed World");
         BtnDirectedWrld.addActionListener(new java.awt.event.ActionListener() {
@@ -104,7 +107,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(BtnDirectedWrld);
-        BtnDirectedWrld.setBounds(710, 240, 130, 50);
+        BtnDirectedWrld.setBounds(1020, 180, 130, 50);
 
         BtnPowerfulCity.setText("Wipe Out Most Powerful City");
         BtnPowerfulCity.setEnabled(false);
@@ -114,7 +117,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(BtnPowerfulCity);
-        BtnPowerfulCity.setBounds(510, 240, 190, 50);
+        BtnPowerfulCity.setBounds(820, 180, 190, 50);
 
         btnAnnihilateWrld.setText("Annihilate the World");
         btnAnnihilateWrld.addActionListener(new java.awt.event.ActionListener() {
@@ -123,7 +126,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAnnihilateWrld);
-        btnAnnihilateWrld.setBounds(1020, 240, 150, 50);
+        btnAnnihilateWrld.setBounds(1330, 180, 150, 50);
 
         btnChooseCityWipeOut.setText("Choose Connection to Destroy");
         btnChooseCityWipeOut.addActionListener(new java.awt.event.ActionListener() {
@@ -132,7 +135,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnChooseCityWipeOut);
-        btnChooseCityWipeOut.setBounds(740, 300, 200, 50);
+        btnChooseCityWipeOut.setBounds(1050, 240, 200, 50);
 
         btnClosestCon2Cities.setText("Wipe Out Closest Connection/ 2 Cities");
         btnClosestCon2Cities.addActionListener(new java.awt.event.ActionListener() {
@@ -141,7 +144,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnClosestCon2Cities);
-        btnClosestCon2Cities.setBounds(250, 300, 250, 50);
+        btnClosestCon2Cities.setBounds(560, 240, 250, 50);
 
         btnArmyCon2Cities.setText("Wipe Out Army Connection/ 2 Cities");
         btnArmyCon2Cities.addActionListener(new java.awt.event.ActionListener() {
@@ -150,7 +153,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnArmyCon2Cities);
-        btnArmyCon2Cities.setBounds(510, 300, 220, 50);
+        btnArmyCon2Cities.setBounds(820, 240, 220, 50);
 
         BtnDivideWrld.setText("Devide World");
         BtnDivideWrld.addActionListener(new java.awt.event.ActionListener() {
@@ -159,13 +162,13 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(BtnDivideWrld);
-        BtnDivideWrld.setBounds(70, 240, 130, 50);
+        BtnDivideWrld.setBounds(380, 180, 130, 50);
 
         JlActualMap.setFont(new java.awt.Font("Source Sans Pro", 1, 24)); // NOI18N
         JlActualMap.setForeground(new java.awt.Color(255, 255, 255));
         JlActualMap.setText("Actual Map");
         getContentPane().add(JlActualMap);
-        JlActualMap.setBounds(70, 370, 260, 31);
+        JlActualMap.setBounds(60, 340, 260, 32);
 
         btnMostEfficientWipeOut.setText("Most Efficient Destruction");
         btnMostEfficientWipeOut.addActionListener(new java.awt.event.ActionListener() {
@@ -174,7 +177,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnMostEfficientWipeOut);
-        btnMostEfficientWipeOut.setBounds(840, 240, 180, 50);
+        btnMostEfficientWipeOut.setBounds(1150, 180, 180, 50);
 
         btnMostConnectedCity.setText("Most Connected City");
         btnMostConnectedCity.addActionListener(new java.awt.event.ActionListener() {
@@ -183,7 +186,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnMostConnectedCity);
-        btnMostConnectedCity.setBounds(350, 240, 150, 50);
+        btnMostConnectedCity.setBounds(660, 180, 150, 50);
 
         btnSaveSimulation.setBackground(new java.awt.Color(102, 0, 51));
         btnSaveSimulation.setFont(new java.awt.Font("sansserif", 0, 10)); // NOI18N
@@ -195,7 +198,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSaveSimulation);
-        btnSaveSimulation.setBounds(1060, 370, 110, 30);
+        btnSaveSimulation.setBounds(1680, 350, 110, 30);
 
         ScrollPathList.setEnabled(false);
 
@@ -207,20 +210,23 @@ public class SkyNetUI extends javax.swing.JFrame {
         ScrollPathList.setViewportView(PathLIst);
 
         getContentPane().add(ScrollPathList);
-        ScrollPathList.setBounds(950, 20, 250, 130);
+        ScrollPathList.setBounds(1260, 20, 250, 130);
 
         JlSimulatedDestruction.setFont(new java.awt.Font("Source Sans Pro", 1, 24)); // NOI18N
         JlSimulatedDestruction.setForeground(new java.awt.Color(102, 0, 51));
         JlSimulatedDestruction.setText("Simulated Destruction");
         getContentPane().add(JlSimulatedDestruction);
-        JlSimulatedDestruction.setBounds(810, 370, 260, 31);
+        JlSimulatedDestruction.setBounds(1240, 340, 260, 32);
 
         scrollPanelActualMap.setViewportView(panelActualMap);
 
         getContentPane().add(scrollPanelActualMap);
-        scrollPanelActualMap.setBounds(50, 410, 520, 340);
-        getContentPane().add(panelSim);
-        panelSim.setBounds(660, 410, 510, 330);
+        scrollPanelActualMap.setBounds(50, 390, 850, 480);
+
+        jScrollPane1.setViewportView(pnlSimulatedMap);
+
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(940, 390, 860, 480);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -241,7 +247,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             String filePath = fileChooser.getSelectedFile().getAbsolutePath();
             
             graph.loadGraph(filePath);
-            graph.paintGraph(panelActualMap);
+            graph.paintGraph("real",panelActualMap);
         }
     }//GEN-LAST:event_BtnLoadMapActionPerformed
 
@@ -249,7 +255,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         setupButtonState();
         BtnPowerfulCity.setEnabled(true);
         graph.convertToDirectGraph();
-        graph.paintGraph(panelActualMap);
+        graph.paintGraph("simulated",pnlSimulatedMap);
     }//GEN-LAST:event_BtnDirectedWrldActionPerformed
 
     private void BtnPowerfulCityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPowerfulCityActionPerformed
@@ -266,9 +272,13 @@ public class SkyNetUI extends javax.swing.JFrame {
     private void btnDisposeSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisposeSimulationActionPerformed
         int dialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to dispose the simulation?", "Dispose Simulation", JOptionPane.YES_NO_OPTION);
         if (dialogResult == JOptionPane.YES_OPTION) {
-        // User clicked Yes, dispose the simulation
-        panelSim.removeAll();
-        enableAllButtons();
+            // User clicked Yes, dispose the simulation
+            //panelSim.removeAll();
+            enableAllButtons();
+            graph.deleteSimulation();
+            pnlSimulatedMap.removeAll();
+            pnlSimulatedMap.revalidate();
+            pnlSimulatedMap.repaint();
         }
     }//GEN-LAST:event_btnDisposeSimulationActionPerformed
 
@@ -279,8 +289,13 @@ public class SkyNetUI extends javax.swing.JFrame {
     private void btnSaveSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveSimulationActionPerformed
         int dialogResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to save the simulation?", "Save Simulation", JOptionPane.YES_NO_OPTION);
         if (dialogResult == JOptionPane.YES_OPTION) {
-        // User clicked Yes, save the simulation
-        enableAllButtons();
+            // User clicked Yes, save the simulation
+            enableAllButtons();
+            graph.saveSimulation();
+            pnlSimulatedMap.removeAll();
+            pnlSimulatedMap.revalidate();
+            pnlSimulatedMap.repaint();
+            graph.paintGraph("real", panelActualMap);
         }
     }//GEN-LAST:event_btnSaveSimulationActionPerformed
 
@@ -420,8 +435,10 @@ public class SkyNetUI extends javax.swing.JFrame {
     private javax.swing.JButton btnSaveSimulation;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelActualMap;
-    private javax.swing.JPanel panelSim;
+    private javax.swing.JPanel pnlSimulatedMap;
     private javax.swing.JScrollPane scrollPanelActualMap;
     // End of variables declaration//GEN-END:variables
 }
