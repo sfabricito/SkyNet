@@ -264,6 +264,7 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void BtnPowerfulCityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPowerfulCityActionPerformed
         setupButtonState();
+        graph.findAndRemoveMostPotentMilitaryNode();
     }//GEN-LAST:event_BtnPowerfulCityActionPerformed
 
     private void btnArmyCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArmyCon2CitiesActionPerformed

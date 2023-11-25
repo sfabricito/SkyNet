@@ -30,6 +30,7 @@ import org.jgrapht.GraphPath;
 
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
 
 
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
@@ -359,7 +360,11 @@ public class CustomGraph {
         ConnectivityInspector<V, E> inspector = new ConnectivityInspector<>(graph);
         return inspector.isConnected();
     }
-    
+    public boolean callisConnected(){
+        boolean connected = isConnected(graph);
+        return connected;
+    }
+            
     public void convertToDirectGraph(){
         simulatedDirectedGraph = convertToDirectedWeightedGraph(graph);
         this.isDirected = true;
@@ -406,9 +411,9 @@ public class CustomGraph {
         this.directedGraph = null;
     }
     
-    // -------------------------------------------- Most Potent Military Node (Case 4) ----------------------------------------
+    //-------------------------------------------- Most Potent Military Node (Case 4) ----------------------------------------
     //Djistra https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/?ref=lbp
-    /*public void findAndRemoveMostPotentMilitaryNode() {
+    public void findAndRemoveMostPotentMilitaryNode() {
         // Find the node with the highest military potential
         Vertex mostPotentMilitaryNode = findMostPotentMilitaryNode();
         
@@ -425,7 +430,6 @@ public class CustomGraph {
             System.out.println("No nodes found in the graph.");
         }
     }
-
     private Vertex findMostPotentMilitaryNode() {
         return graph.vertexSet().stream()
                 .max(Comparator.comparingDouble(vertex -> ((Vertex) vertex).getMilitaryPotential()))
@@ -433,24 +437,24 @@ public class CustomGraph {
     }
  
     private List<GraphPath<Vertex, DefaultEdge>> determineEfficientPathsToNode(Vertex targetNode) {
-        List<GraphPath<Vertex, DefaultEdge>> efficientPaths = new ArrayList<>();
-        
-        BreadthFirstIterator<Vertex, DefaultEdge> iterator = new BreadthFirstIterator<>(graph, targetNode);
-        while (iterator.hasNext()) {
-            Vertex sourceNode = iterator.next();
-            if (!sourceNode.equals(targetNode)) {
-                DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
-                        new DijkstraShortestPath<>(graph, sourceNode, v -> graph.getEdgeWeight(v));
+    List<GraphPath<Vertex, DefaultEdge>> efficientPaths = new ArrayList<>();
 
-                GraphPath<Vertex, DefaultEdge> shortestPath = dijkstra.getPath(targetNode);
-                if (shortestPath != null) {
-                    efficientPaths.add(shortestPath);
-                }
+    BreadthFirstIterator<Vertex, DefaultEdge> iterator = new BreadthFirstIterator<>(graph, targetNode);
+    while (iterator.hasNext()) {
+        Vertex sourceNode = iterator.next();
+        if (!sourceNode.equals(targetNode)) {
+            DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
+                    new DijkstraShortestPath<>(graph);
+
+            GraphPath<Vertex, DefaultEdge> shortestPath = dijkstra.getPath(sourceNode, targetNode);
+            if (shortestPath != null) {
+                efficientPaths.add(shortestPath);
             }
         }
-
+    }
         return efficientPaths;
     }
+
 
     private void listAndRemovePaths(List<GraphPath<Vertex, DefaultEdge>> pathsToRemove) {
         System.out.println("Efficient Paths to Most Potent Military Node:");
@@ -471,7 +475,6 @@ public class CustomGraph {
                 .mapToDouble(edge -> ((Edge) edge).getMilitary())
                 .sum();
     }
-    */
     
     // -------------------------------------------- Euler Circuit (Case 5) ----------------------------------------
     //https://www.geeksforgeeks.org/euler-circuit-directed-graph/?ref=lbp
@@ -680,8 +683,7 @@ public class CustomGraph {
         // Visualize the updated graph
         System.out.println("Updated Graph:");
         
-    }
-    */
+    }*/
     // -------------------------------------------- Dijkstra with All Paths (Case 9) ----------------------------------------
     //Algortimo para el noveno caso
     //Djistra pero que retorne todos los caminos y escoger que camino
