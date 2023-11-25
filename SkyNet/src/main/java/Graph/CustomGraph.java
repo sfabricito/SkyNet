@@ -7,6 +7,7 @@ import edu.uci.ics.jung.graph.SparseGraph;
 import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,23 +20,35 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
+import java.util.function.ToDoubleFunction;
 import java.util.stream.Collectors;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
 
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
+import org.jgrapht.alg.interfaces.SpanningTreeAlgorithm;
 
 
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.GraphWalk;
 import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
+import org.jgrapht.traverse.BreadthFirstIterator;
 import skynet.skynet.SkyNetUI;
+
+
 /**
  *
  * @author fabri
@@ -73,7 +86,7 @@ public class CustomGraph {
                 for (Edge edge : vertex.getEdges()) {
                     Vertex toVertex = searchNodeByName(edge.getToVertex());
                     if (toVertex != null && vertex != toVertex) {
-                        graph.addEdge(vertex, toVertex);
+                        graph.addEdge(vertex, toVertex, edge);
                     }
                 }
             }              
@@ -83,7 +96,6 @@ public class CustomGraph {
     }
     
     public void paintGraph(String command, JPanel panel){
-        
         if (!isDirected) {
             edu.uci.ics.jung.graph.Graph<String, String> jungGraph = new SparseGraph<>();
             if (command.equals("real")) {
@@ -141,6 +153,41 @@ public class CustomGraph {
             panel.add(vv);
         }
     }
+    
+    public void paintExternalGraph(org.jgrapht.Graph<Vertex, DefaultEdge> graph, JPanel panel){
+        System.out.println("Graph.CustomGraph.paintExternalGraph() 1");
+            edu.uci.ics.jung.graph.Graph<String, String> jungGraph = convertJGraphTtoJUNG(graph);            
+             // Create JUNG visualization
+            // Layout for the graph
+             System.out.println("Graph.CustomGraph.paintExternalGraph() 2");
+            CircleLayout<String, String> layout = new CircleLayout<>(jungGraph);
+            System.out.println("Graph.CustomGraph.paintExternalGraph() 3");
+            //layout.setSize(new Dimension(300, 300));
+
+            // Visualization server
+            BasicVisualizationServer<String, String> vv = new BasicVisualizationServer<>(layout);
+            System.out.println("Graph.CustomGraph.paintExternalGraph() 4");
+            ///vv.setPreferredSize(new Dimension(350, 350));
+
+            // Set up vertex and edge renderers
+            // Set up vertex and edge renderers
+            vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+            System.out.println("Graph.CustomGraph.paintExternalGraph() 5");
+            vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
+            System.out.println("Graph.CustomGraph.paintExternalGraph() 6");
+            vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+            System.out.println("Graph.CustomGraph.paintExternalGraph() 7");
+
+            // Display the graph in a JFrame
+            panel.removeAll();
+            panel.add(vv);
+            panel.revalidate();
+            panel.repaint();
+
+            // Add the graph visualization to the panel
+            panel.add(vv);
+        
+    } 
     
     private static edu.uci.ics.jung.graph.Graph<String, String> convertJGraphTtoJUNG(org.jgrapht.Graph<Vertex, DefaultEdge> jGraphTGraph) {
         edu.uci.ics.jung.graph.Graph<String, String> jungGraph = new SparseGraph<>();
@@ -213,8 +260,8 @@ public class CustomGraph {
         directedGraph = cloneDirectedGraph(simulatedDirectedGraph);
     }
     public void deleteSimulation(){
-        this.graph = null;
-        this.directedGraph = null;
+        simulatedGraph = new SimpleWeightedGraph<>(DefaultEdge.class);
+        simulatedDirectedGraph = new DefaultDirectedWeightedGraph<>(DefaultEdge.class);
     }
     
     private Graph<Vertex, DefaultEdge> cloneSimpleGraph(Graph<Vertex, DefaultEdge> originalGraph) {
@@ -318,43 +365,56 @@ public class CustomGraph {
         }
 
         // Apply Kruskal's algorithm to find the minimum spanning tree based on goods
+        KruskalMinimumSpanningTree<Vertex, DefaultEdge> kruskal =
+                new KruskalMinimumSpanningTree<>(graph);
 
-    KruskalMinimumSpanningTree<Vertex, DefaultEdge> kruskal =
-        new KruskalMinimumSpanningTree<>(graph);
+        // Get the minimum spanning tree edges
+        Set<DefaultEdge> spanningTreeEdges = kruskal.getSpanningTree().getEdges();
 
-    Graph<Vertex, DefaultEdge> minimumSpanningTreeGraph = (Graph<Vertex, DefaultEdge>) kruskal.getSpanningTree();
-    List<DefaultEdge> sortedEdges = minimumSpanningTreeGraph
-        .edgeSet()
-        .stream()
-        .sorted(Comparator.comparingDouble(e -> ((Edge) e).getGoods()))
-        .collect(Collectors.toList());
+        // Convert the set to a list of your custom Edge class
+        List<Edge> spanningTreeEdgeList = spanningTreeEdges.stream()
+                .map(e -> (Edge) e)  // Explicitly cast to your custom Edge class
+                .collect(Collectors.toList());
 
+        // Sort the edges based on goods
+        List<Edge> sortedEdges = spanningTreeEdgeList
+                .stream()
+                .sorted(Comparator.comparingDouble(Edge::getGoods))
+                .collect(Collectors.toList());
 
         // Get the minimum spanning tree as a graph
-        Graph<Vertex, DefaultEdge> minimumSpanningTree = new SimpleGraph<>(DefaultEdge.class);
-        Graphs.addAllVertices(minimumSpanningTree, graph.vertexSet());
-        for (DefaultEdge edge : kruskal.getSpanningTree().getEdges()) {
-            minimumSpanningTree.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge));
-        }
-
-        // Print or process the minimum spanning tree as needed
-        System.out.println("Minimum Spanning Tree Edges:");
-        for (DefaultEdge edge : minimumSpanningTree.edgeSet()) {
-            Vertex source = graph.getEdgeSource(edge);
-            Vertex target = graph.getEdgeTarget(edge);
-            System.out.println(source + " -- " + target + " Goods: " + ((Edge) edge).getGoods());
-        }
+        Graph<Vertex, DefaultEdge> minimumSpanningTreeGraph = createGraphFromEdges(spanningTreeEdges, graph);
 
         // Visualize the minimum spanning tree (You can replace this with your own visualization logic)
 
         // Annul the corresponding edges in the original graph
-        for (DefaultEdge edge : minimumSpanningTree.edgeSet()) {
-            graph.removeEdge(edge);
+        //simulatedGraph = cloneSimpleGraph(graph);
+        simulatedGraph = cloneSimpleGraph(graph);
+        for (DefaultEdge edge : minimumSpanningTreeGraph.edgeSet()) {
+            
+            Vertex sourceVertex = minimumSpanningTreeGraph.getEdgeSource(edge);
+            Vertex targetVertex = minimumSpanningTreeGraph.getEdgeTarget(edge);
+            simulatedGraph.removeEdge(sourceVertex, targetVertex);
+        }
+        
+        JPanel panel = new JPanel();
+        paintExternalGraph(minimumSpanningTreeGraph, panel);
+        window.openPopup(panel, "Minimum Spanning Tree Graph");
+        // Visualize the graph after annulment (You can replace this with your own visualization logic)
+    }
+
+    private Graph<Vertex, DefaultEdge> createGraphFromEdges(Set<DefaultEdge> edges, Graph<Vertex, DefaultEdge> originalGraph) {
+        Graph<Vertex, DefaultEdge> newGraph = new SimpleGraph<>(DefaultEdge.class);
+        Graphs.addAllVertices(newGraph, originalGraph.vertexSet());
+
+        for (DefaultEdge edge : edges) {
+            newGraph.addEdge(originalGraph.getEdgeSource(edge), originalGraph.getEdgeTarget(edge));
         }
 
-        // Visualize the graph after annulment (You can replace this with your own visualization logic)
-        
+        return newGraph;
     }
+
+        
     
     private void visualizeGraph(Graph<Vertex, DefaultEdge> graphToVisualize) {
         System.out.println("Visualizing Graph:");
@@ -437,7 +497,7 @@ public class CustomGraph {
                 .max(Comparator.comparingDouble(vertex -> ((Vertex) vertex).getMilitaryPotential()))
                 .orElse(null);
     }
- 
+    
     private List<GraphPath<Vertex, DefaultEdge>> determineEfficientPathsToNode(Vertex targetNode) {
     List<GraphPath<Vertex, DefaultEdge>> efficientPaths = new ArrayList<>();
 

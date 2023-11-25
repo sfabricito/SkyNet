@@ -2,15 +2,22 @@
 package skynet.skynet;
 
 import Graph.CustomGraph;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.Set;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.Popup;
 
 
 
@@ -24,7 +31,9 @@ public class SkyNetUI extends javax.swing.JFrame {
         initComponents();
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         ScrollPathList.setVisible(false);
-    }
+        
+        
+       }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -302,6 +311,8 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void BtnRestrictGoodsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnRestrictGoodsActionPerformed
         setupButtonState();
+        graph.visualizeMinimumSpanningTreeByGoods();
+        graph.paintGraph("simulated", pnlSimulatedMap);
     }//GEN-LAST:event_BtnRestrictGoodsActionPerformed
 
     private void btnMostConnectedCityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostConnectedCityActionPerformed
@@ -376,21 +387,32 @@ public class SkyNetUI extends javax.swing.JFrame {
         btnMostEfficientWipeOut.setEnabled(true);
         btnMostConnectedCity.setEnabled(true);
     }
-    private static void openPopup(JFrame parentFrame) {
-        JDialog popupDialog = new JDialog(parentFrame, "Popup Frame", true);
-        popupDialog.setSize(200, 150);
+     
+    public void openPopup(JPanel panel, String title) {
+        JDialog popupDialog = new JDialog(this, "Popup Frame", true);
+        popupDialog.setSize(800, 800);
 
-        JLabel popupLabel = new JLabel("This is a popup frame!");
         JButton closeButton = new JButton("Close");
         closeButton.addActionListener(e -> popupDialog.dispose());
 
-        JPanel popupPanel = new JPanel();
-        popupPanel.add(popupLabel);
-        popupPanel.add(closeButton);
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        popupDialog.add(popupPanel);
+        JLabel label = new JLabel(title);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT); // Center the label horizontally
+
+        // Set a custom font for the label
+        Font customFont = new Font("Source Sans Pro", 1, 22); // Change "Arial" to the desired font family
+        label.setFont(customFont);
+
+        contentPanel.add(label);
+        contentPanel.add(new JScrollPane(panel));
+
+        popupDialog.add(contentPanel);
+        //popupDialog.add(closeButton, BorderLayout.SOUTH);
         popupDialog.setVisible(true);
     }
+
     /**
      * @param args the command line arguments
      */
