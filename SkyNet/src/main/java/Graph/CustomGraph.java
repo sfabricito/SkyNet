@@ -32,12 +32,14 @@ import org.jgrapht.GraphPath;
 
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
+import org.jgrapht.alg.cycle.HierholzerEulerianCycle;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
 import org.jgrapht.alg.interfaces.SpanningTreeAlgorithm;
 
 
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -155,28 +157,21 @@ public class CustomGraph {
     }
     
     public void paintExternalGraph(org.jgrapht.Graph<Vertex, DefaultEdge> graph, JPanel panel){
-        System.out.println("Graph.CustomGraph.paintExternalGraph() 1");
             edu.uci.ics.jung.graph.Graph<String, String> jungGraph = convertJGraphTtoJUNG(graph);            
              // Create JUNG visualization
             // Layout for the graph
-             System.out.println("Graph.CustomGraph.paintExternalGraph() 2");
             CircleLayout<String, String> layout = new CircleLayout<>(jungGraph);
-            System.out.println("Graph.CustomGraph.paintExternalGraph() 3");
             //layout.setSize(new Dimension(300, 300));
 
             // Visualization server
             BasicVisualizationServer<String, String> vv = new BasicVisualizationServer<>(layout);
-            System.out.println("Graph.CustomGraph.paintExternalGraph() 4");
             ///vv.setPreferredSize(new Dimension(350, 350));
 
             // Set up vertex and edge renderers
             // Set up vertex and edge renderers
             vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
-            System.out.println("Graph.CustomGraph.paintExternalGraph() 5");
             vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
-            System.out.println("Graph.CustomGraph.paintExternalGraph() 6");
             vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
-            System.out.println("Graph.CustomGraph.paintExternalGraph() 7");
 
             // Display the graph in a JFrame
             panel.removeAll();
@@ -188,6 +183,25 @@ public class CustomGraph {
             panel.add(vv);
         
     } 
+    
+    public void paintEulerCircuitGraph(JPanel panel, org.jgrapht.Graph<Vertex, DefaultEdge> jGraphTGraph, List<DefaultEdge> edgeList){
+            edu.uci.ics.jung.graph.Graph<String, String> jungGraph = convertEdgestoJUNG(jGraphTGraph, edgeList);
+            // Create JUNG visualization
+            BasicVisualizationServer<String, String> vv = new BasicVisualizationServer<>(new CircleLayout<>(jungGraph));
+            vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+
+            // Set edge labels to be displayed
+            vv.getRenderContext().setEdgeLabelTransformer(edge -> edge);
+
+            // Display the graph in a JFrame
+            panel.removeAll();
+            panel.add(vv);
+            panel.revalidate();
+            panel.repaint();
+
+            // Add the graph visualization to the panel
+            panel.add(vv);
+    }
     
     private static edu.uci.ics.jung.graph.Graph<String, String> convertJGraphTtoJUNG(org.jgrapht.Graph<Vertex, DefaultEdge> jGraphTGraph) {
         edu.uci.ics.jung.graph.Graph<String, String> jungGraph = new SparseGraph<>();
@@ -207,7 +221,6 @@ public class CustomGraph {
                 jungGraph.addEdge(edgeIdentifier, source.getVertex(), target.getVertex());
             }
         }
-
         return jungGraph;
     }
     
@@ -227,6 +240,34 @@ public class CustomGraph {
                 Vertex target = Graphs.getOppositeVertex(jGraphTGraph, edge, source);
                 String edgeIdentifier = source.getVertex()  + " - " + target.getVertex() ;
                 jungGraph.addEdge(edgeIdentifier, source.getVertex(), target.getVertex());
+            }
+        }
+
+        return jungGraph;
+    }
+    
+    private static edu.uci.ics.jung.graph.Graph<String, String> convertEdgestoJUNG(org.jgrapht.Graph<Vertex, DefaultEdge> jGraphTGraph, List<DefaultEdge> edgeList) {
+        edu.uci.ics.jung.graph.Graph<String, String> jungGraph = new SparseGraph<>();
+
+        // Add vertices
+        Set<Vertex> vertices = jGraphTGraph.vertexSet();
+        for (Vertex vertex : vertices) {
+            jungGraph.addVertex(vertex.getVertex());
+        }
+
+        // Add edges
+        for (DefaultEdge edge : edgeList) {
+            Vertex source = jGraphTGraph.getEdgeSource(edge);
+            Vertex target = jGraphTGraph.getEdgeTarget(edge);
+
+            // Unique edge identifier based on source and target vertices
+            String edgeIdentifier = Integer.toString(edgeList.indexOf(edge) + 1);
+
+            // Check if the edge already exists before adding it
+            if (!jungGraph.containsEdge(edgeIdentifier)) {
+                jungGraph.addEdge(edgeIdentifier, source.getVertex(), target.getVertex());
+            } else {
+ 
             }
         }
 
@@ -349,9 +390,6 @@ public class CustomGraph {
 
         return tempGraph;
     }
-
-
-    
 
     // -------------------------------------------- Minimum spanning tree by goods (Case 2) ----------------------------------------
     //https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/?ref=lbp
@@ -540,36 +578,42 @@ public class CustomGraph {
     // -------------------------------------------- Euler Circuit (Case 5) ----------------------------------------
     //https://www.geeksforgeeks.org/euler-circuit-directed-graph/?ref=lbp
     public void totalAnnihilation() {
-        // Check if the graph is connected
         ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
+        // Check if the graph is connected
         if (!connectivityInspector.isConnected()) {
             System.out.println("The graph is not connected. Total annihilation not possible.");
-            window.AnnihilationNotPosibleNotConnected();
+            //window.AnnihilationNotPosibleNotConnected();
             return;
         }
 
         // Check if the degrees are suitable for Eulerian circuit
-        if (!checkDegreesForEulerianCircuit()) {
+        if (!checkDegreesForEulerianCircuit(graph)) {
             System.out.println("In-degree and out-degree are not equal for each vertex. Total annihilation not possible.");
-            window.AnnihilationNotPosibleNotEven();
+            //window.AnnihilationNotPosibleNotEven();
             return;
         }
 
-        // Find an Eulerian circuit
-        List<Vertex> eulerianCircuit = findEulerianCircuit();
+        // Find Eulerian Circuit
+        HierholzerEulerianCycle<Vertex, DefaultEdge> eulerianCycle =
+                new HierholzerEulerianCycle<>(); // Explicitly specify types here
+        List<DefaultEdge> edgeList = eulerianCycle.getEulerianCycle(graph).getEdgeList();
 
-        // Display the Eulerian circuit
-        System.out.println("Eulerian Circuit (Total Annihilation):");
-        for (int i = 0; i < eulerianCircuit.size() - 1; i++) {
-            Vertex source = eulerianCircuit.get(i);
-            Vertex target = eulerianCircuit.get(i + 1);
-            DefaultEdge edge = graph.getEdge(source, target);
-            System.out.println(source + " -- " + target);
+        // Print edges in the process
+        /*
+        System.out.println("Eulerian Circuit: ");
+        for (DefaultEdge edge : edgeList) {
+            System.out.println(this.graph.getEdgeSource(edge).getVertex() + " -> " + this.graph.getEdgeTarget(edge).getVertex());
         }
-        window.AnnihilationPosible();
+        */
+        
+        simulatedGraph = cloneSimpleGraph(this.graph);
+        
+        JPanel panel = new JPanel();        
+        paintEulerCircuitGraph(panel, simulatedGraph, edgeList);
+        window.openPopup(panel, "Euler Circuit");
     }
-
-    private boolean checkDegreesForEulerianCircuit() {
+    
+    private boolean checkDegreesForEulerianCircuit(Graph<Vertex, DefaultEdge> graph) {
         for (Vertex vertex : graph.vertexSet()) {
             int degree = graph.degreeOf(vertex);
             if (degree % 2 != 0) {
