@@ -182,7 +182,6 @@ public class CustomGraph {
 
             // Add the graph visualization to the panel
             panel.add(vv);
-        
     } 
     
     public void paintEulerCircuitGraph(JPanel panel, org.jgrapht.Graph<Vertex, DefaultEdge> jGraphTGraph, List<DefaultEdge> edgeList){
@@ -203,6 +202,33 @@ public class CustomGraph {
             // Add the graph visualization to the panel
             panel.add(vv);
     }
+    
+    public void paintWeightGraph(org.jgrapht.Graph<Vertex, DefaultWeightedEdge> graph, JPanel panel){
+            edu.uci.ics.jung.graph.Graph<String, String> jungGraph = convertJGraphTWeightToJUNG(graph);            
+             // Create JUNG visualization
+            // Layout for the graph
+            CircleLayout<String, String> layout = new CircleLayout<>(jungGraph);
+            //layout.setSize(new Dimension(300, 300));
+
+            // Visualization server
+            BasicVisualizationServer<String, String> vv = new BasicVisualizationServer<>(layout);
+            ///vv.setPreferredSize(new Dimension(350, 350));
+
+            // Set up vertex and edge renderers
+            // Set up vertex and edge renderers
+            vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+            vv.getRenderContext().setEdgeLabelTransformer(new ToStringLabeller());
+            vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+
+            // Display the graph in a JFrame
+            panel.removeAll();
+            panel.add(vv);
+            panel.revalidate();
+            panel.repaint();
+
+            // Add the graph visualization to the panel
+            panel.add(vv);
+    } 
     
     private static edu.uci.ics.jung.graph.Graph<String, String> convertJGraphTtoJUNG(org.jgrapht.Graph<Vertex, DefaultEdge> jGraphTGraph) {
         edu.uci.ics.jung.graph.Graph<String, String> jungGraph = new SparseGraph<>();
@@ -275,8 +301,51 @@ public class CustomGraph {
         return jungGraph;
     }
     
+    private static edu.uci.ics.jung.graph.Graph<String, String> convertJGraphTWeightToJUNG(org.jgrapht.Graph<Vertex, DefaultWeightedEdge> jGraphTGraph) {
+        edu.uci.ics.jung.graph.Graph<String, String> jungGraph = new SparseGraph<>();
+
+        // Add vertices
+        Set<Vertex> vertices = jGraphTGraph.vertexSet();
+        for (Vertex vertex : vertices) {
+            jungGraph.addVertex(vertex.getVertex());
+        }
+
+        // Add edges
+        int edgeCounter = 1; // Initialize a counter for unique edge identifiers
+        for (Vertex source : vertices) {
+            Set<DefaultWeightedEdge> outgoingEdges = jGraphTGraph.outgoingEdgesOf(source);
+            for (DefaultWeightedEdge edge : outgoingEdges) {
+                Vertex target = Graphs.getOppositeVertex(jGraphTGraph, edge, source);
+                String edgeIdentifier = "Route " + edgeCounter + "               Distance: " + jGraphTGraph.getEdgeWeight(edge); // Use a unique identifier for each edge
+                jungGraph.addEdge(edgeIdentifier, source.getVertex(), target.getVertex());
+            }
+            edgeCounter++;
+        }
+
+        return jungGraph;
+    }
+
+    
     public Vertex searchNodeByName(String vertexName){
         for (Vertex vertex : graph.vertexSet()) {
+            if (vertex.getVertex().equals(vertexName)) {
+                return vertex;
+            }
+        }
+        return null;
+    }
+    
+    public Vertex searchNodeByNameWeightGraph(String vertexName){
+        for (Vertex vertex : graphWeight.vertexSet()) {
+            if (vertex.getVertex().equals(vertexName)) {
+                return vertex;
+            }
+        }
+        return null;
+    }
+    
+    public Vertex searchNodeByNameGraph(String vertexName, org.jgrapht.Graph<Vertex, DefaultWeightedEdge> jGraphTGraph){
+        for (Vertex vertex : jGraphTGraph.vertexSet()) {
             if (vertex.getVertex().equals(vertexName)) {
                 return vertex;
             }
@@ -552,20 +621,22 @@ public class CustomGraph {
         return efficientPaths;
     }
 
-    private void convertGraphToWeight(String command) {
+    public void convertGraphToWeight(String command) {
         graphWeight = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 
-        for (Vertex vertex : directedGraph.vertexSet()) {
+        for (Vertex vertex : graph.vertexSet()) {
             graphWeight.addVertex(vertex);
         }
-
+        
+        
         // Copy edges with weight from directedGraph to graphWeight
         for (DefaultEdge edge : graph.edgeSet()) {
-            Vertex source = graph.getEdgeSource(edge);
-            Vertex target = graph.getEdgeTarget(edge);
+            Vertex sourceGraph = graph.getEdgeSource(edge);
+            Vertex targetGraph = graph.getEdgeTarget(edge);
 
             // Add a weighted edge with the corresponding weight to the new graph
-            DefaultWeightedEdge weightedEdge = graphWeight.addEdge(source, target);
+            
+            DefaultWeightedEdge weightedEdge = graphWeight.addEdge(sourceGraph, targetGraph);
             if (command.equals("distance")) {
                 graphWeight.setEdgeWeight(weightedEdge, ((Edge) edge).getDistance());
             }
@@ -573,6 +644,9 @@ public class CustomGraph {
                 graphWeight.setEdgeWeight(weightedEdge, ((Edge) edge).getMilitary());
             }
         }
+        
+        System.out.println("Load Weight Graph Succefully");
+        System.out.println("Graph Weight: " + graphWeight);
     }
 
 
@@ -756,16 +830,36 @@ public class CustomGraph {
 
 
 
-
+/*
     
     // -------------------------------------------- Dijkstra Less Distance (Case 7) ----------------------------------------
     public void removeShortestPath(String startCity, String endCity) {
-        convertGraphToWeight("distance");
-        DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
-                new DijkstraShortestPath<>(graphWeight, edge -> (double) ((Edge) edge).getDistance());
+    convertGraphToWeight("distance");
 
-        SingleSourcePaths<Vertex, DefaultEdge> paths = dijkstra.getPaths(searchNodeByName(startCity));
-        GraphPath<Vertex, DefaultEdge> shortestPath = paths.getPath(searchNodeByName(endCity));
+        // Use try-with-resources to ensure resources are closed
+        try {
+            DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
+                    new DijkstraShortestPath<>(graphWeight, edge -> (double) ((Edge) edge).getDistance());
+
+            SingleSourcePaths<Vertex, DefaultEdge> paths = dijkstra.getPaths(searchNodeByName(startCity));
+
+            // Check if there is a path from startCity to endCity
+            if (paths.getPath(searchNodeByName(endCity)) != null) {
+                GraphPath<Vertex, DefaultEdge> shortestPath = paths.getPath(searchNodeByName(endCity));
+
+                // Your logic to remove the shortest path
+                // For example, you might remove the edges in the shortest path:
+                for (DefaultEdge edge : shortestPath.getEdgeList()) {
+                    graphWeight.removeEdge(edge);
+                }
+            } else {
+                // Handle the case where there is no path from startCity to endCity
+                System.out.println("No path from " + startCity + " to " + endCity);
+            }
+        } catch (IllegalArgumentException e) {
+            // Handle exceptions related to invalid arguments, if any
+            e.printStackTrace();
+        }
 
         if (shortestPath == null) {
             System.out.println("No path found from " + startCity + " to " + endCity);
@@ -791,6 +885,58 @@ public class CustomGraph {
         // Visualize the updated graph
         System.out.println("Updated Graph:");
         
+    }*/
+    
+    public void removeShortestPathDistance(String startCity, String endCity) {
+        convertGraphToWeight("distance");
+        Vertex sourceGraph = searchNodeByNameWeightGraph(startCity);
+        Vertex targetGraph = searchNodeByNameWeightGraph(endCity);
+
+        GraphPath<Vertex, DefaultWeightedEdge> path = determineEfficientPathToNode(sourceGraph, targetGraph);
+
+        SimpleWeightedGraph<Vertex, DefaultWeightedEdge> pathGraph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+
+        for (Vertex vertex : path.getVertexList()) {
+            pathGraph.addVertex(vertex);
+        }
+
+        for (DefaultWeightedEdge defaultWeightedEdge : path.getEdgeList()) {
+            Vertex sourceVertex = path.getGraph().getEdgeSource(defaultWeightedEdge);
+            Vertex targetVertex = path.getGraph().getEdgeTarget(defaultWeightedEdge);
+
+            // Adding the edge to pathGraph
+            pathGraph.addEdge(sourceVertex, targetVertex, defaultWeightedEdge);
+        }
+
+        System.out.println("Load Weight Graph Successfully");
+        System.out.println("Graph: " + graph);
+        System.out.println("Graph Simulated: " + simulatedGraph);
+        System.out.println("Graph Weight: " + graphWeight);
+
+        simulatedGraph = cloneSimpleGraph(graph);
+
+        // Remove edges from simulatedGraph
+        for (DefaultWeightedEdge edge : pathGraph.edgeSet()) {
+            Vertex source = pathGraph.getEdgeSource(edge);
+            Vertex target = pathGraph.getEdgeTarget(edge);
+
+            simulatedGraph.removeEdge(source, target);
+        }
+
+        JPanel panel = new JPanel();
+        paintWeightGraph(pathGraph, panel);
+        window.openPopup(panel, "Shortest Path between " + startCity + " to " + endCity + " By Distance");
+    }
+
+    
+    public GraphPath<Vertex, DefaultWeightedEdge> determineEfficientPathToNode(Vertex sourceNode, Vertex targetNode) {
+        // Convert the graph to a weighted graph if not already done
+        // Use Dijkstra's algorithm to find the shortest paths
+        DijkstraShortestPath<Vertex, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(graphWeight);
+        SingleSourcePaths<Vertex, DefaultWeightedEdge> singleSourcePaths = dijkstraAlg.getPaths(sourceNode);
+
+        // Return the GraphPath object
+        return singleSourcePaths.getPath(targetNode);
     }
     
     // -------------------------------------------- Dijkstra Most Military(Case 8) NOT WORKING----------------------------------------
