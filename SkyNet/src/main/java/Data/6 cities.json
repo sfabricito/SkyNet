@@ -42,7 +42,7 @@
   {
     "vertex": "Washington DC",
     "soldiers": 4000,
-    "missiles": 3500,
+    "missiles": 3000,
     "techLevel": 9,
     "edges": [
       {

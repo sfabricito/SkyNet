@@ -502,7 +502,8 @@ public class CustomGraph {
     public void findAndRemoveMostPotentMilitaryNode() {
         // Find the node with the highest military potential
         Vertex mostPotentMilitaryNode = findMostPotentMilitaryNode();
-        
+        System.out.println("Graph.CustomGraph.findAndRemoveMostPotentMilitaryNode()");
+        System.out.println(mostPotentMilitaryNode.getMilitaryPotential());
         if (mostPotentMilitaryNode != null) {
             // Determine all paths from any node to the most potent military node
             List<GraphPath<Vertex, DefaultEdge>> efficientPaths = determineEfficientPathsToNode(mostPotentMilitaryNode);
@@ -517,7 +518,7 @@ public class CustomGraph {
         }
     }
     private Vertex findMostPotentMilitaryNode() {
-        return graph.vertexSet().stream()
+        return directedGraph.vertexSet().stream()
                 .max(Comparator.comparingDouble(vertex -> ((Vertex) vertex).getMilitaryPotential()))
                 .orElse(null);
     }
@@ -525,12 +526,12 @@ public class CustomGraph {
     private List<GraphPath<Vertex, DefaultEdge>> determineEfficientPathsToNode(Vertex targetNode) {
     List<GraphPath<Vertex, DefaultEdge>> efficientPaths = new ArrayList<>();
 
-    BreadthFirstIterator<Vertex, DefaultEdge> iterator = new BreadthFirstIterator<>(graph, targetNode);
+    BreadthFirstIterator<Vertex, DefaultEdge> iterator = new BreadthFirstIterator<>(directedGraph, targetNode);
     while (iterator.hasNext()) {
         Vertex sourceNode = iterator.next();
         if (!sourceNode.equals(targetNode)) {
             DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
-                    new DijkstraShortestPath<>(graph);
+                    new DijkstraShortestPath<>(directedGraph);
 
             GraphPath<Vertex, DefaultEdge> shortestPath = dijkstra.getPath(sourceNode, targetNode);
             if (shortestPath != null) {
@@ -551,7 +552,7 @@ public class CustomGraph {
 
             // Remove the path from the graph
             for (DefaultEdge edge : path.getEdgeList()) {
-                graph.removeEdge(edge);
+                directedGraph.removeEdge(edge);
             }
         }
     }
