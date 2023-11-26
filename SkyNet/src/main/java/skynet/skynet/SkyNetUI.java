@@ -277,6 +277,8 @@ public class SkyNetUI extends javax.swing.JFrame {
         Set<String> availableCities = graph.getVertexNames();
         String city1 = showInputDialog("Enter the name of the first city interested in:",availableCities);
         String city2 = showInputDialog("Enter the name of the second city interested in:",availableCities);
+        graph.removeShortestPath("military", city1, city2);
+        graph.paintGraph("simulated", pnlSimulatedMap);
     }//GEN-LAST:event_btnArmyCon2CitiesActionPerformed
 
     private void btnDisposeSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisposeSimulationActionPerformed
@@ -345,7 +347,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         Set<String> availableCities = graph.getVertexNames();
         String city1 = showInputDialog("Enter the name of the first city interested in:",availableCities);
         String city2 = showInputDialog("Enter the name of the second city interested in:",availableCities);
-        graph.removeShortestPathDistance(city1, city2);
+        graph.removeShortestPath("distance", city1, city2);
         graph.paintGraph("simulated", pnlSimulatedMap);
     }//GEN-LAST:event_btnClosestCon2CitiesActionPerformed
     

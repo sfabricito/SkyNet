@@ -203,8 +203,8 @@ public class CustomGraph {
             panel.add(vv);
     }
     
-    public void paintWeightGraph(org.jgrapht.Graph<Vertex, DefaultWeightedEdge> graph, JPanel panel){
-            edu.uci.ics.jung.graph.Graph<String, String> jungGraph = convertJGraphTWeightToJUNG(graph);            
+    public void paintWeightGraph(String command, org.jgrapht.Graph<Vertex, DefaultWeightedEdge> graph, JPanel panel){
+            edu.uci.ics.jung.graph.Graph<String, String> jungGraph = convertJGraphTWeightToJUNG(command, graph);            
              // Create JUNG visualization
             // Layout for the graph
             CircleLayout<String, String> layout = new CircleLayout<>(jungGraph);
@@ -301,7 +301,7 @@ public class CustomGraph {
         return jungGraph;
     }
     
-    private static edu.uci.ics.jung.graph.Graph<String, String> convertJGraphTWeightToJUNG(org.jgrapht.Graph<Vertex, DefaultWeightedEdge> jGraphTGraph) {
+    private static edu.uci.ics.jung.graph.Graph<String, String> convertJGraphTWeightToJUNG(String command, org.jgrapht.Graph<Vertex, DefaultWeightedEdge> jGraphTGraph) {
         edu.uci.ics.jung.graph.Graph<String, String> jungGraph = new SparseGraph<>();
 
         // Add vertices
@@ -316,7 +316,14 @@ public class CustomGraph {
             Set<DefaultWeightedEdge> outgoingEdges = jGraphTGraph.outgoingEdgesOf(source);
             for (DefaultWeightedEdge edge : outgoingEdges) {
                 Vertex target = Graphs.getOppositeVertex(jGraphTGraph, edge, source);
-                String edgeIdentifier = "Route " + edgeCounter + "               Distance: " + jGraphTGraph.getEdgeWeight(edge); // Use a unique identifier for each edge
+                String edgeIdentifier = "";
+                if (command.equals("distance")) {
+                    edgeIdentifier = "Route " + edgeCounter + "               Distance: " + jGraphTGraph.getEdgeWeight(edge);
+                }
+                if (command.equals("military")) {
+                    edgeIdentifier = "Route " + edgeCounter + "               Military: " + jGraphTGraph.getEdgeWeight(edge);
+                }
+                 // Use a unique identifier for each edge
                 jungGraph.addEdge(edgeIdentifier, source.getVertex(), target.getVertex());
             }
             edgeCounter++;
@@ -644,9 +651,6 @@ public class CustomGraph {
                 graphWeight.setEdgeWeight(weightedEdge, ((Edge) edge).getMilitary());
             }
         }
-        
-        System.out.println("Load Weight Graph Succefully");
-        System.out.println("Graph Weight: " + graphWeight);
     }
 
 
@@ -830,65 +834,17 @@ public class CustomGraph {
 
 
 
-/*
+
     
     // -------------------------------------------- Dijkstra Less Distance (Case 7) ----------------------------------------
-    public void removeShortestPath(String startCity, String endCity) {
-    convertGraphToWeight("distance");
-
-        // Use try-with-resources to ensure resources are closed
-        try {
-            DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
-                    new DijkstraShortestPath<>(graphWeight, edge -> (double) ((Edge) edge).getDistance());
-
-            SingleSourcePaths<Vertex, DefaultEdge> paths = dijkstra.getPaths(searchNodeByName(startCity));
-
-            // Check if there is a path from startCity to endCity
-            if (paths.getPath(searchNodeByName(endCity)) != null) {
-                GraphPath<Vertex, DefaultEdge> shortestPath = paths.getPath(searchNodeByName(endCity));
-
-                // Your logic to remove the shortest path
-                // For example, you might remove the edges in the shortest path:
-                for (DefaultEdge edge : shortestPath.getEdgeList()) {
-                    graphWeight.removeEdge(edge);
-                }
-            } else {
-                // Handle the case where there is no path from startCity to endCity
-                System.out.println("No path from " + startCity + " to " + endCity);
-            }
-        } catch (IllegalArgumentException e) {
-            // Handle exceptions related to invalid arguments, if any
-            e.printStackTrace();
+    public void removeShortestPath(String command, String startCity, String endCity) {
+        if (command.equals("distance")) {
+            convertGraphToWeight("distance");
         }
-
-        if (shortestPath == null) {
-            System.out.println("No path found from " + startCity + " to " + endCity);
-            window.NoPathFound();
-            return;
+        if (command.equals("military")) {
+            convertGraphToWeight("military");
         }
-
-        // Print the shortest path with distances
-        System.out.println("Shortest Path from " + startCity + " to " + endCity + ":");
-        for (DefaultEdge edge : shortestPath.getEdgeList()) {
-            Vertex source = graph.getEdgeSource(edge);
-            Vertex target = graph.getEdgeTarget(edge);
-            System.out.println(source + " -- " + target + " Distance: " + ((Edge) edge).getDistance());
-        }
-
-        // Remove the shortest path from the graph
-        for (DefaultEdge edge : shortestPath.getEdgeList()) {
-            Vertex source = graph.getEdgeSource(edge);
-            Vertex target = graph.getEdgeTarget(edge);
-            graph.removeEdge(graph.getEdge(source, target));
-        }
-
-        // Visualize the updated graph
-        System.out.println("Updated Graph:");
         
-    }*/
-    
-    public void removeShortestPathDistance(String startCity, String endCity) {
-        convertGraphToWeight("distance");
         Vertex sourceGraph = searchNodeByNameWeightGraph(startCity);
         Vertex targetGraph = searchNodeByNameWeightGraph(endCity);
 
@@ -908,11 +864,6 @@ public class CustomGraph {
             pathGraph.addEdge(sourceVertex, targetVertex, defaultWeightedEdge);
         }
 
-        System.out.println("Load Weight Graph Successfully");
-        System.out.println("Graph: " + graph);
-        System.out.println("Graph Simulated: " + simulatedGraph);
-        System.out.println("Graph Weight: " + graphWeight);
-
         simulatedGraph = cloneSimpleGraph(graph);
 
         // Remove edges from simulatedGraph
@@ -924,8 +875,13 @@ public class CustomGraph {
         }
 
         JPanel panel = new JPanel();
-        paintWeightGraph(pathGraph, panel);
-        window.openPopup(panel, "Shortest Path between " + startCity + " to " + endCity + " By Distance");
+        paintWeightGraph(command, pathGraph, panel);
+        if (command.equals("distance")) {
+            window.openPopup(panel, "Shortest Path between " + startCity + " to " + endCity + " By Distance");
+        }
+        if (command.equals("military")) {
+            window.openPopup(panel, "Shortest Path between " + startCity + " to " + endCity + " By Military");
+        }
     }
 
     
