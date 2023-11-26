@@ -869,8 +869,6 @@ private void findAllPathsDFS(
 }
 
     // -------------------------------------------- Tech Level-Best Annihilation (Case 10) ----------------------------------------
-
-
     public void determineTraversalOrderAndEliminateMostExpensivePath() {
         // Determine the order of traversal based on technological level
         List<Vertex> traversalOrder = determineTraversalOrder();
@@ -882,10 +880,11 @@ private void findAllPathsDFS(
             // Remove the most expensive path from the graph
             removePathFromGraph(mostExpensivePath);
 
-            // Visualize the updated graph (You can replace this with your own visualization logic)
-            //visualizeRemovedPath();
-            
-            System.out.println("Most expensive path eliminated.");
+            Graph<Vertex, DefaultEdge> path = getGraphDifference(graph, simulatedGraph);
+            JPanel panel = new JPanel();
+            paintExternalGraph(path, panel);
+            window.openPopup(panel, "Most Efficient Destruction");
+            //System.out.println("Most expensive path eliminated.");
         } else {
             System.out.println("No path found or the graph is empty.");
             window.NoPathFound();
@@ -994,6 +993,29 @@ private void findAllPathsDFS(
 
     private double calculateEdgeMilitaryPower(DefaultEdge edge) {
         return ((Edge) edge).getMilitary();
+    }
+    
+    private static Graph<Vertex, DefaultEdge> getGraphDifference(
+            Graph<Vertex, DefaultEdge> originalGraph, Graph<Vertex, DefaultEdge> modifiedGraph) {
+        Graph<Vertex, DefaultEdge> differenceGraph = new SimpleDirectedGraph<>(DefaultEdge.class);
+
+        // Add all vertices from the original graph to the differenceGraph
+        for (Vertex vertex : originalGraph.vertexSet()) {
+            differenceGraph.addVertex(vertex);
+        }
+
+        // Add edges that are in the original graph but not in the modified graph
+        for (DefaultEdge edge : originalGraph.edgeSet()) {
+            Vertex source = originalGraph.getEdgeSource(edge);
+            Vertex target = originalGraph.getEdgeTarget(edge);
+
+            // Add the edge only if it is not present in the modified graph
+            if (!modifiedGraph.containsEdge(source, target)) {
+                differenceGraph.addEdge(source, target);
+            }
+        }
+
+        return differenceGraph;
     }
 }
 
