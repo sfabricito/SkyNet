@@ -47,7 +47,7 @@
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="C:\Users\pavel\OneDrive\Documents\NetBeansProjects\SkyNet\SkyNet\src\main\java\Images\WorldExterminated.jpg"/>
+          <Image iconType="2" name="C:\Users\fabri\Documents\Universidad\II Semestre\Estructuras de Datos\SkyNet\SkyNet\src\main\java\Images\WorldExterminated.jpg"/>
         </Property>
       </Properties>
       <Constraints>

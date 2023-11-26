@@ -40,9 +40,9 @@ public class WorldExterminated extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("World Exterminated ");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(270, 30, 260, 31);
+        jLabel2.setBounds(270, 30, 260, 32);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\pavel\\OneDrive\\Documents\\NetBeansProjects\\SkyNet\\SkyNet\\src\\main\\java\\Images\\WorldExterminated.jpg")); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\fabri\\Documents\\Universidad\\II Semestre\\Estructuras de Datos\\SkyNet\\SkyNet\\src\\main\\java\\Images\\WorldExterminated.jpg")); // NOI18N
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 800, 500);
 

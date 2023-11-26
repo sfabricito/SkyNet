@@ -172,7 +172,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         JlActualMap.setForeground(new java.awt.Color(255, 255, 255));
         JlActualMap.setText("Actual Map");
         getContentPane().add(JlActualMap);
-        JlActualMap.setBounds(60, 340, 260, 31);
+        JlActualMap.setBounds(60, 340, 260, 32);
 
         btnMostEfficientWipeOut.setText("Most Efficient Destruction");
         btnMostEfficientWipeOut.addActionListener(new java.awt.event.ActionListener() {
@@ -220,7 +220,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         JlSimulatedDestruction.setForeground(new java.awt.Color(102, 0, 51));
         JlSimulatedDestruction.setText("Simulated Destruction");
         getContentPane().add(JlSimulatedDestruction);
-        JlSimulatedDestruction.setBounds(1240, 340, 260, 31);
+        JlSimulatedDestruction.setBounds(1240, 340, 260, 32);
 
         scrollPanelActualMap.setViewportView(panelActualMap);
 
@@ -232,7 +232,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         getContentPane().add(jScrollPane1);
         jScrollPane1.setBounds(940, 390, 860, 480);
 
-        Background.setIcon(new javax.swing.ImageIcon("C:\\Users\\pavel\\OneDrive\\Documents\\NetBeansProjects\\SkyNet\\SkyNet\\src\\main\\java\\Images\\BackGround.jpg")); // NOI18N
+        Background.setIcon(new javax.swing.ImageIcon("C:\\Users\\fabri\\Documents\\Universidad\\II Semestre\\Estructuras de Datos\\SkyNet\\SkyNet\\src\\main\\java\\Images\\BackGround.jpg")); // NOI18N
         getContentPane().add(Background);
         Background.setBounds(0, 0, 1850, 1040);
 
@@ -269,6 +269,7 @@ public class SkyNetUI extends javax.swing.JFrame {
     private void BtnPowerfulCityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnPowerfulCityActionPerformed
         setupButtonState();
         graph.findAndRemoveMostPotentMilitaryNode();
+        graph.paintGraph("simulated",pnlSimulatedMap);
     }//GEN-LAST:event_BtnPowerfulCityActionPerformed
 
     private void btnArmyCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArmyCon2CitiesActionPerformed

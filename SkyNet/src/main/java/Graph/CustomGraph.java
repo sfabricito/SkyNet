@@ -61,6 +61,7 @@ public class CustomGraph {
     private org.jgrapht.Graph<Vertex, DefaultEdge> removedPathGraph = new SimpleGraph<>(DefaultEdge.class);
     private org.jgrapht.Graph<Vertex, DefaultEdge> simulatedGraph = new SimpleWeightedGraph<>(DefaultEdge.class);
     private org.jgrapht.Graph<Vertex, DefaultEdge> simulatedDirectedGraph = new DefaultDirectedWeightedGraph<>(DefaultEdge.class);
+    private SimpleWeightedGraph<Vertex, DefaultWeightedEdge> graphWeight = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
     
     private boolean isDirected;
     public SkyNetUI window;
@@ -502,15 +503,17 @@ public class CustomGraph {
     public void findAndRemoveMostPotentMilitaryNode() {
         // Find the node with the highest military potential
         Vertex mostPotentMilitaryNode = findMostPotentMilitaryNode();
-        System.out.println("Graph.CustomGraph.findAndRemoveMostPotentMilitaryNode()");
         System.out.println(mostPotentMilitaryNode.getMilitaryPotential());
         if (mostPotentMilitaryNode != null) {
             // Determine all paths from any node to the most potent military node
-            List<GraphPath<Vertex, DefaultEdge>> efficientPaths = determineEfficientPathsToNode(mostPotentMilitaryNode);
+            System.out.println("Graph.CustomGraph.findAndRemoveMostPotentMilitaryNode() 1");
+            List<GraphPath<Vertex, DefaultWeightedEdge>> efficientPaths = determineEfficientPathsToNode(mostPotentMilitaryNode);
 
+            System.out.println("Graph.CustomGraph.findAndRemoveMostPotentMilitaryNode() 2");
             // List and remove the efficient paths
+            System.out.println("Graph.CustomGraph.findAndRemoveMostPotentMilitaryNode() 3");
             listAndRemovePaths(efficientPaths);
-
+            System.out.println("Graph.CustomGraph.findAndRemoveMostPotentMilitaryNode() 4");
             // Visualize the updated graph
             
         } else {
@@ -523,38 +526,82 @@ public class CustomGraph {
                 .orElse(null);
     }
     
-    private List<GraphPath<Vertex, DefaultEdge>> determineEfficientPathsToNode(Vertex targetNode) {
-    List<GraphPath<Vertex, DefaultEdge>> efficientPaths = new ArrayList<>();
+    private List<GraphPath<Vertex, DefaultWeightedEdge>> determineEfficientPathsToNode(Vertex targetNode) {
+        convertGraphToWeight("distance");
+        //DijkstraShortestPath<Vertex, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(graphWeight);
+        List<GraphPath<Vertex, DefaultWeightedEdge>> efficientPaths = new ArrayList<>();
+        // Iterate over all vertices in the graph
+        System.out.println("*********************************************************************");
+        System.out.println("Graph size: " + graphWeight.vertexSet().size());
+        for (Vertex startNode : graphWeight.vertexSet()) {
+            // Calculate the shortest paths from startNode to targetNode
+            DijkstraShortestPath<Vertex, DefaultWeightedEdge> dijkstraAlg = new DijkstraShortestPath<>(graphWeight);
+            GraphPath<Vertex, DefaultWeightedEdge> shortestPath = dijkstraAlg.getPath(startNode, targetNode);
 
-    BreadthFirstIterator<Vertex, DefaultEdge> iterator = new BreadthFirstIterator<>(directedGraph, targetNode);
-    while (iterator.hasNext()) {
-        Vertex sourceNode = iterator.next();
-        if (!sourceNode.equals(targetNode)) {
-            DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
-                    new DijkstraShortestPath<>(directedGraph);
-
-            GraphPath<Vertex, DefaultEdge> shortestPath = dijkstra.getPath(sourceNode, targetNode);
             if (shortestPath != null) {
+                System.out.println("--------------------------------------------------------------------------------------");
                 efficientPaths.add(shortestPath);
+                System.out.println("Shortest path from " + startNode + " to " + targetNode + ":");
+                System.out.println("Vertices: " + shortestPath.getVertexList());
+                System.out.println("Edges: " + shortestPath.getEdgeList());
+                System.out.println("Total Weight: " + shortestPath.getWeight());
+                System.out.println("FUNCIONE PEDAZO DE MALPARIDO-");
             }
         }
-    }
+        System.out.println("Graph.CustomGraph.determineEfficientPathsToNode() 5");
         return efficientPaths;
     }
 
+    private void convertGraphToWeight(String command) {
+        graphWeight = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 
-    private void listAndRemovePaths(List<GraphPath<Vertex, DefaultEdge>> pathsToRemove) {
-        System.out.println("Efficient Paths to Most Potent Military Node:");
-        for (GraphPath<Vertex, DefaultEdge> path : pathsToRemove) {
-            System.out.println("Path: " + path.getVertexList() +
-                    " Distance: " + path.getWeight() +
-                    " Military Power: " + calculateMilitaryPower(path));
+        for (Vertex vertex : directedGraph.vertexSet()) {
+            graphWeight.addVertex(vertex);
+        }
 
-            // Remove the path from the graph
-            for (DefaultEdge edge : path.getEdgeList()) {
-                directedGraph.removeEdge(edge);
+        // Copy edges with weight from directedGraph to graphWeight
+        for (DefaultEdge edge : graph.edgeSet()) {
+            Vertex source = graph.getEdgeSource(edge);
+            Vertex target = graph.getEdgeTarget(edge);
+
+            // Add a weighted edge with the corresponding weight to the new graph
+            DefaultWeightedEdge weightedEdge = graphWeight.addEdge(source, target);
+            if (command.equals("distance")) {
+                graphWeight.setEdgeWeight(weightedEdge, ((Edge) edge).getDistance());
+            }
+            if (command.equals("military")) {
+                graphWeight.setEdgeWeight(weightedEdge, ((Edge) edge).getMilitary());
             }
         }
+    }
+
+
+    private void listAndRemovePaths(List<GraphPath<Vertex, DefaultWeightedEdge>> pathsToRemove) {
+        
+      simulatedDirectedGraph = cloneDirectedGraph(directedGraph);
+        System.out.println("Graph.CustomGraph.listAndRemovePaths() 1");
+        int counter1 = 0;
+        for (GraphPath<Vertex, DefaultWeightedEdge> path : pathsToRemove) {
+            /*System.out.println("Path: " + path.getVertexList() +
+                    " Distance: " + path.getWeight() +
+                    " Military Power: ");*/
+
+            System.out.println("Graph.CustomGraph.listAndRemovePaths() 2, cout: " + counter1++);
+            int counter2 = 0;
+            // Remove the path from the graph
+            for (DefaultWeightedEdge edge : path.getEdgeList()) {
+                System.out.println("Graph.CustomGraph.listAndRemovePaths() 3, cout: " + counter2++);
+                Vertex sourceVertex = graphWeight.getEdgeSource(edge);
+                System.out.println("Graph.CustomGraph.listAndRemovePaths() 4");
+                Vertex targetVertex = graphWeight.getEdgeTarget(edge);//Grafo ponderado, search en el grafo simulado, remove grafo simulado
+                System.out.println("Graph.CustomGraph.listAndRemovePaths() 5");
+                DefaultEdge edgeSimple = simulatedDirectedGraph.getEdge(sourceVertex, targetVertex);
+                System.out.println("Graph.CustomGraph.listAndRemovePaths() 6");
+                simulatedDirectedGraph.removeEdge(edgeSimple);
+                System.out.println("Graph.CustomGraph.listAndRemovePaths() 7, end counter");
+            }
+        }
+        System.out.println("Graph.CustomGraph.listAndRemovePaths() 8, end counter");
     }
 
     private double calculateMilitaryPower(GraphPath<Vertex, DefaultEdge> path) {
@@ -712,10 +759,10 @@ public class CustomGraph {
 
     
     // -------------------------------------------- Dijkstra Less Distance (Case 7) ----------------------------------------
-    /*
     public void removeShortestPath(String startCity, String endCity) {
+        convertGraphToWeight("distance");
         DijkstraShortestPath<Vertex, DefaultEdge> dijkstra =
-                new DijkstraShortestPath<>(graph, edge -> (double) ((Edge) edge).getDistance());
+                new DijkstraShortestPath<>(graphWeight, edge -> (double) ((Edge) edge).getDistance());
 
         SingleSourcePaths<Vertex, DefaultEdge> paths = dijkstra.getPaths(searchNodeByName(startCity));
         GraphPath<Vertex, DefaultEdge> shortestPath = paths.getPath(searchNodeByName(endCity));
@@ -745,7 +792,6 @@ public class CustomGraph {
         System.out.println("Updated Graph:");
         
     }
-    */
     
     // -------------------------------------------- Dijkstra Most Military(Case 8) NOT WORKING----------------------------------------
     public void findAndRemoveStrongestMilitaryPath(String sourceCity, String targetCity) {
