@@ -10,11 +10,13 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.util.Set;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -31,8 +33,7 @@ public class SkyNetUI extends javax.swing.JFrame {
     public SkyNetUI() {
         initComponents();
         ScrollPathList.setVisible(false);
-        
-        
+        setList();
        }
 
     /**
@@ -62,7 +63,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         btnMostConnectedCity = new javax.swing.JButton();
         btnSaveSimulation = new javax.swing.JButton();
         ScrollPathList = new javax.swing.JScrollPane();
-        PathLIst = new javax.swing.JList<>();
+        ListPath = new javax.swing.JList<>();
         JlSimulatedDestruction = new javax.swing.JLabel();
         scrollPanelActualMap = new javax.swing.JScrollPane();
         panelActualMap = new javax.swing.JPanel();
@@ -172,7 +173,7 @@ public class SkyNetUI extends javax.swing.JFrame {
         JlActualMap.setForeground(new java.awt.Color(255, 255, 255));
         JlActualMap.setText("Actual Map");
         getContentPane().add(JlActualMap);
-        JlActualMap.setBounds(60, 340, 260, 32);
+        JlActualMap.setBounds(60, 340, 260, 31);
 
         btnMostEfficientWipeOut.setText("Most Efficient Destruction");
         btnMostEfficientWipeOut.addActionListener(new java.awt.event.ActionListener() {
@@ -206,21 +207,21 @@ public class SkyNetUI extends javax.swing.JFrame {
 
         ScrollPathList.setEnabled(false);
 
-        PathLIst.setModel(new javax.swing.AbstractListModel<String>() {
+        ListPath.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        ScrollPathList.setViewportView(PathLIst);
+        ScrollPathList.setViewportView(ListPath);
 
         getContentPane().add(ScrollPathList);
-        ScrollPathList.setBounds(1260, 20, 250, 130);
+        ScrollPathList.setBounds(740, 10, 370, 130);
 
         JlSimulatedDestruction.setFont(new java.awt.Font("Source Sans Pro", 1, 24)); // NOI18N
         JlSimulatedDestruction.setForeground(new java.awt.Color(102, 0, 51));
         JlSimulatedDestruction.setText("Simulated Destruction");
         getContentPane().add(JlSimulatedDestruction);
-        JlSimulatedDestruction.setBounds(1240, 340, 260, 32);
+        JlSimulatedDestruction.setBounds(1240, 340, 260, 31);
 
         scrollPanelActualMap.setViewportView(panelActualMap);
 
@@ -271,7 +272,15 @@ public class SkyNetUI extends javax.swing.JFrame {
         graph.findAndRemoveMostPotentMilitaryNode();
         graph.paintGraph("simulated",pnlSimulatedMap);
     }//GEN-LAST:event_BtnPowerfulCityActionPerformed
-
+    private void setList(){
+        DefaultListModel<String> pathListModel = new DefaultListModel<>();
+        getPathList().setModel(pathListModel);
+    }
+    
+    public JList<String> getPathList() {
+        return ListPath;
+    }
+    
     private void btnArmyCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArmyCon2CitiesActionPerformed
         setupButtonState();
         Set<String> availableCities = graph.getVertexNames();
@@ -291,11 +300,19 @@ public class SkyNetUI extends javax.swing.JFrame {
             pnlSimulatedMap.removeAll();
             pnlSimulatedMap.revalidate();
             pnlSimulatedMap.repaint();
+            ScrollPathList.setVisible(false);
         }
     }//GEN-LAST:event_btnDisposeSimulationActionPerformed
 
     private void btnChooseCityWipeOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseCityWipeOutActionPerformed
         setupButtonState();
+        Set<String> availableCities = graph.getVertexNames();
+        String city1 = showInputDialog("Enter the name of the first city interested in:",availableCities);
+        String city2 = showInputDialog("Enter the name of the second city interested in:",availableCities);
+        ScrollPathList.setVisible(true);
+        ListPath.setEnabled(true);
+        graph.findAndRemovePath(city1, city2);
+        graph.paintGraph("simulated", pnlSimulatedMap);
     }//GEN-LAST:event_btnChooseCityWipeOutActionPerformed
 
     private void btnSaveSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveSimulationActionPerformed
@@ -308,6 +325,7 @@ public class SkyNetUI extends javax.swing.JFrame {
             pnlSimulatedMap.revalidate();
             pnlSimulatedMap.repaint();
             graph.paintGraph("real", panelActualMap);
+            ScrollPathList.setVisible(false);
         }
     }//GEN-LAST:event_btnSaveSimulationActionPerformed
 
@@ -381,6 +399,35 @@ public class SkyNetUI extends javax.swing.JFrame {
     public void NoPathFound(){
         JOptionPane.showMessageDialog(null, "No path found between the specified cities.", "Connected Status", JOptionPane.WARNING_MESSAGE);
     }
+    public int ChoosePathfromList(int numberOfElements) {
+        int selectedNumber = -1;  // Initialize to an invalid value
+
+        while (true) {
+            String userInput = JOptionPane.showInputDialog(null, "Please enter a number for the path from the list above.\nIf not chosen, the process will not eliminate nor continue:", "Connection Elimination", JOptionPane.WARNING_MESSAGE);
+
+            // Handle cancel or empty input
+            if (userInput == null || userInput.trim().isEmpty()) {
+                return -1; // You may want to choose a specific value to represent no selection
+            }
+
+            try {
+                selectedNumber = Integer.parseInt(userInput);
+
+                // Validate if the entered number is within the range of valid indices
+                if (selectedNumber > 0 && selectedNumber <= numberOfElements) {
+                    break;  // Break out of the loop if the input is valid
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid input. Please enter a number within the valid range.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (NumberFormatException e) {
+                // Handle the case where the user did not enter a valid number
+                JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        return selectedNumber;
+    }
+
     public void AnnihilationNotPosibleNotConnected(){
         JOptionPane.showMessageDialog(null, "Annihilation is not possible. The graph is not connected.", "Annihilation Status", JOptionPane.WARNING_MESSAGE);
     }
@@ -486,7 +533,7 @@ public class SkyNetUI extends javax.swing.JFrame {
     private javax.swing.JButton BtnRestrictGoods;
     private javax.swing.JLabel JlActualMap;
     private javax.swing.JLabel JlSimulatedDestruction;
-    private javax.swing.JList<String> PathLIst;
+    private javax.swing.JList<String> ListPath;
     private javax.swing.JScrollPane ScrollPathList;
     private javax.swing.JButton btnAnnihilateWrld;
     private javax.swing.JButton btnArmyCon2Cities;
