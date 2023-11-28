@@ -678,12 +678,6 @@ public class CustomGraph {
         System.out.println("Graph.CustomGraph.listAndRemovePaths() 8, end counter");
     }
 
-    private double calculateMilitaryPower(GraphPath<Vertex, DefaultEdge> path) {
-        return path.getEdgeList().stream()
-                .mapToDouble(edge -> ((Edge) edge).getMilitary())
-                .sum();
-    }
-    
     // -------------------------------------------- Euler Circuit (Case 5) ----------------------------------------
     //https://www.geeksforgeeks.org/euler-circuit-directed-graph/?ref=lbp
     public void totalAnnihilation(String command) {
