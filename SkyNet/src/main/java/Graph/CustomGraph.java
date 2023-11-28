@@ -686,7 +686,7 @@ public class CustomGraph {
     
     // -------------------------------------------- Euler Circuit (Case 5) ----------------------------------------
     //https://www.geeksforgeeks.org/euler-circuit-directed-graph/?ref=lbp
-    public void totalAnnihilation() {
+    public void totalAnnihilation(String command) {
         ConnectivityInspector<Vertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
         // Check if the graph is connected
         if (!connectivityInspector.isConnected()) {
@@ -712,7 +712,9 @@ public class CustomGraph {
         JPanel panel = new JPanel();        
         paintEulerCircuitGraph(panel, simulatedGraph, edgeList);
         window.openPopup(panel, "Euler Circuit");
-        window.AnnihilationPosible();
+        if (command.equals("5")) {
+            window.AnnihilationPosible();
+        }
     }
     
     private boolean checkDegreesForEulerianCircuit(Graph<Vertex, DefaultEdge> graph) {

@@ -32,6 +32,7 @@ public class SkyNetUI extends javax.swing.JFrame {
     CustomGraph graph = new CustomGraph(this);
     public SkyNetUI() {
         initComponents();
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         ScrollPathList.setVisible(false);
         setList();
        }
@@ -343,7 +344,7 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void btnMostConnectedCityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostConnectedCityActionPerformed
         setupButtonState();
-        graph.totalAnnihilation();
+        graph.totalAnnihilation("6");
         graph.findAndRemoveMostVisitedVertices();
         graph.paintGraph("simulated", pnlSimulatedMap);
     }//GEN-LAST:event_btnMostConnectedCityActionPerformed
@@ -356,7 +357,7 @@ public class SkyNetUI extends javax.swing.JFrame {
 
     private void btnAnnihilateWrldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnnihilateWrldActionPerformed
         setupButtonState();
-        graph.totalAnnihilation();
+        graph.totalAnnihilation("5");
     }//GEN-LAST:event_btnAnnihilateWrldActionPerformed
 
     private void btnClosestCon2CitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClosestCon2CitiesActionPerformed
